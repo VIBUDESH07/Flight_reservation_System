@@ -16,10 +16,6 @@
     color: inherit;
 }
 
-.logo-image {
-    height: 40px; /* Adjust height as needed */
-    margin-right: 0.5rem; /* Add spacing between image and text */
-}
 
 .logo {
     margin: 0;
@@ -32,6 +28,7 @@
     color: white;
     border-radius: 50%;
     padding: 0.5rem;
+    rotate: -39deg;
 }
 
 .search-container {
@@ -51,6 +48,9 @@
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
+}
+.btn{
+    margin-right: 5rem;
 }
 
 #login {
@@ -104,9 +104,10 @@
 
 @media (max-width: 480px) {
     .navbar {
-        padding: 0.5rem;
+        padding: 1rem;
         flex-direction: row;
         align-items: center;
+        justify-content: space-between;
     }
 
     .home-icon,
