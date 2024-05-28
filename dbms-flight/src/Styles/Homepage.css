@@ -1,0 +1,45 @@
+
+.image {
+    position: relative; 
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    border-radius: 50%;
+}
+
+.image img {
+    position: absolute; /* Position the image absolutely within the .image container */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ensure the image fills the container */
+    height: 100%;
+    object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+    border-radius: 0% 0% 10% 10%;
+}
+
+.image h1 {
+    position: absolute; /* Position the h1 text absolutely within the .image container */
+    top: 30%;
+    left: 50%;
+    font-weight: bolder;  
+    font-style: italic;
+    transform: translate(-50%, -50%); /* Center the text horizontally and vertically */
+    color: #828e68; /* Set text color */
+    text-align: center; /* Center-align the text */
+    z-index: 1; /* Ensure the text appears above the image */
+}
+
+.container {
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* Center the container horizontally */
+    width: 70%;
+    top:60%;
+    left:15%;
+    height: 50vh;
+    background-color: white;
+    box-shadow: 0px 2px 10px -3px black;
+    border-radius: 10px;
+    z-index: 100;
+}
