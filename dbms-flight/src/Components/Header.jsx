@@ -2,7 +2,6 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlane, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import logoImage from '../Styles/pics/malediven[1].webp'; // Import your image
 import '../Styles/header.css';
 
 const Header = () => {
@@ -14,12 +13,14 @@ const Header = () => {
         <h5 className='logo'>Travel</h5>
       </Link>
       <div className='search-container'>
-        <input type='text' className='search' placeholder='Search...'/>
+        <input type='text' className='search' placeholder='   Search...'/>
         <FontAwesomeIcon icon={faSearch} className='search-icon' />
       </div>
+      <div class='btn'>
       <Link to='/login'>
         <button id="login">Log in</button>
       </Link>
+      </div>
     </div>
   );
 }
