@@ -5,8 +5,12 @@ import mysql.connector
 from mysql.connector import Error
 from google.oauth2 import id_token
 from google.auth.transport import requests
+import base64
+
 app = Flask(__name__)
 CORS(app)
+
+GOOGLE_CLIENT_ID = 'your_google_client_id'
 
 def connect_to_database():
     try:
@@ -37,7 +41,6 @@ def add_flight():
     date_time = request.form['dateTime']
     flight_img = request.files['flightImg']
 
-    # Ensure the uploads directory exists
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
 
@@ -59,13 +62,13 @@ def add_flight():
         return jsonify({"message": "Flight details inserted successfully"}), 201
     else:
         return jsonify({"message": "Failed to connect to database"}), 500
+
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data['username']
     password = data['password']
 
-    # Dummy authentication logic
     if username == 'admin' and password == 'admin':
         return jsonify({'success': True})
     else:
@@ -84,7 +87,6 @@ def google_login():
         email = idinfo.get('email')
         name = idinfo.get('name')
 
-        # Check if user exists, if not create new user
         connection = connect_to_database()
         if connection:
             cursor = connection.cursor()
@@ -92,10 +94,8 @@ def google_login():
             user = cursor.fetchone()
 
             if user:
-                # User exists
                 return jsonify({"success": True})
             else:
-                # Create new user
                 cursor.execute("INSERT INTO users (google_id, email, name) VALUES (%s, %s, %s)", (userid, email, name))
                 connection.commit()
                 return jsonify({"success": True})
@@ -105,5 +105,36 @@ def google_login():
     except Exception as e:
         print(e)
         return jsonify({"success": False}), 500
+
+@app.route('/api/flight-data', methods=['POST'])
+def get_flight_data():
+    data = request.json
+    from_value = data.get('from')
+    to_value = data.get('to')
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+        SELECT flight_name, destination, arrival, date_time, 
+               CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
+        FROM flight
+        WHERE destination = %s AND arrival = %s
+        """
+        cursor.execute(query, (from_value, to_value))
+        flight_data = cursor.fetchall()
+
+        return jsonify(flight_data)
+
+    except Error as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
