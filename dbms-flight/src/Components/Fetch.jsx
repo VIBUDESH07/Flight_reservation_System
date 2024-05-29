@@ -34,7 +34,7 @@ const Fetch = () => {
   }, []);
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <div className="loading-spinner"></div>;  // Use the spinner for loading
   }
 
   return (
@@ -42,14 +42,13 @@ const Fetch = () => {
       <h2>Flight Data</h2>
       {data.map((flight, index) => (
         <div key={index} className="flight-card">
-        <div>
-          <img src={`data:image/jpeg;base64,${flight.flight_img_base64}`} alt="Flight" className="flight-image" />
+          <div className="flight-image">
+            <img src={`data:image/jpeg;base64,${flight.flight_img_base64}`} alt="Flight"  />
           </div>
           <div className="flight-details">
-            <p><strong>Flight Name:</strong> {flight.flight_name}</p>
-            <p><strong>Destination:</strong> {flight.destination}</p>
-            <p><strong>Arrival:</strong> {flight.arrival}</p>
-            <p><strong>Date and Time:</strong> {flight.date_time}</p>
+            <p className='head'>{flight.flight_name}</p>
+            <p className='dest'>{flight.destination}  to {flight.arrival}</p>
+            <p className='date'>{flight.date_time}</p>
             <button className='btn-container'>Make Appointment</button>
           </div>
         </div>
