@@ -1,13 +1,22 @@
 /* Styles/header.css */
+/* Styles/header.css */
 .navbar {
+    position: fixed; /* Set the position to fixed */
+    top: 0; /* Position the navbar at the top of the viewport */
+    left: 0; /* Position the navbar at the left of the viewport */
+    width: 100%; /* Make the navbar take up the full width */
+    z-index: 1000; /* Ensure the navbar appears above other content */
     display: flex;
-    padding: 1rem 2rem; /* Reduced padding for better responsiveness */
+    padding: 1rem 2rem;
     align-items: center;
-    justify-content: space-between; /* Changed to space-between for better alignment */
+    justify-content: space-between;
     overflow: hidden;
     background-color: white;
     box-shadow: 0px 1px 10px -5px black;
 }
+
+/* Rest of your existing styles */
+
 
 .logo-container {
     display: flex;
@@ -50,7 +59,7 @@
     pointer-events: none;
 }
 .btn{
-    margin-right: 5rem;
+    margin-right: 10rem;
 }
 
 #login {
@@ -58,13 +67,14 @@
     letter-spacing: 1px;
     margin-right: 1rem; 
     background-color: green;
+    color:aliceblue;
     border-radius: 40px;
     height: 5vh;
     width:150%;
 }
 
 #login:hover {
-    /* Add hover styles */
+    g
 }
 
 /* Responsive styles */
