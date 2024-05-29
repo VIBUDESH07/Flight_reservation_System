@@ -4,7 +4,7 @@ import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import '../Styles/Login.css';
 
-const clientId = '385912730587-j6k27i8r3mi0guq5ipiq5re783n4v2ot.apps.googleusercontent.com'; 
+const clientId = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq.apps.googleusercontent.com'; 
 
 const Login = () => {
   const [username, setUsername] = useState('');
