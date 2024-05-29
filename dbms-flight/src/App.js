@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "./Components/Layout";
 import HomePage from "./Components/HomePage";
 import Addflight from "./Components/Addflight";
+import Login from "./Components/Login";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
 
     <Routes>
       <Route path='/' element={<Layout/>}></Route>
+      <Route path='/login' element={<Login/>}></Route>
       <Route path='/add' element={<Addflight/>}></Route>
     </Routes>
    </div>
