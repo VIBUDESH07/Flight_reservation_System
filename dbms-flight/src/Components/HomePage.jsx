@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlane, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faPlane, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import logoImage from '../Styles/pics/malediven[1].webp'; // Import your image
 import '../Styles/Homepage.css';
 
@@ -40,7 +40,11 @@ const HomePage = () => {
               onChange={(e) => setFromValue(e.target.value)}
             />
           </div>
-          <FontAwesomeIcon icon={faArrowRight} className='arrow-icon' />
+          <div className='arrow-icon'>  
+         <FontAwesomeIcon icon={faArrowRight}  />
+          <FontAwesomeIcon icon={faArrowLeft}  />
+          </div>
+
           <div className='to-container'>
             <label className={`to-label ${toFocused || toValue ? 'active' : ''}`}>TO</label>
             <input
