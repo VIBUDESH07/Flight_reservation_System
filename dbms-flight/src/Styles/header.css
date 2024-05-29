@@ -74,7 +74,7 @@
 }
 
 #login:hover {
-    g
+    
 }
 
 /* Responsive styles */
@@ -123,6 +123,9 @@
     .home-icon,
     #login {
         margin: 0.9rem 0;
+    }
+    .btn{
+        margin-right: 0.5rem;
     }
 
     .search-container {
