@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// HomePage.js
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlane, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import logoImage from '../Styles/pics/malediven[1].webp'; // Import your image
@@ -6,9 +8,24 @@ import '../Styles/Homepage.css';
 
 const HomePage = () => {
   const [fromFocused, setFromFocused] = useState(false);
-  const [fromValue, setFromValue] = useState('');
+  const [fromValue, setFromValue] = useState(localStorage.getItem('fromValue') || '');
   const [toFocused, setToFocused] = useState(false);
-  const [toValue, setToValue] = useState('');
+  const [toValue, setToValue] = useState(localStorage.getItem('toValue') || '');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem('fromValue', fromValue);
+    console.log(fromValue);
+  }, [fromValue]);
+
+  useEffect(() => {
+    localStorage.setItem('toValue', toValue);
+    console.log(toValue);
+  }, [toValue]);
+
+  const handleSearch = () => {
+    navigate('/fetch');
+  };
 
   return (
     <div>
@@ -16,7 +33,7 @@ const HomePage = () => {
         <h1>Travel for enough, you meet yourself...</h1>
         <img src={logoImage} alt='main' />
       </div>
-      <div className={`button-container`}>
+      <div className='button-container'>
         <button className='flight-button'>
           <FontAwesomeIcon icon={faPlane} className='flight-icon' />
           Flights
@@ -41,10 +58,9 @@ const HomePage = () => {
             />
           </div>
           <div className='arrow-icon'>  
-         <FontAwesomeIcon icon={faArrowRight}  />
-          <FontAwesomeIcon icon={faArrowLeft}  />
+            <FontAwesomeIcon icon={faArrowRight} />
+            <FontAwesomeIcon icon={faArrowLeft} />
           </div>
-
           <div className='to-container'>
             <label className={`to-label ${toFocused || toValue ? 'active' : ''}`}>TO</label>
             <input
@@ -57,6 +73,11 @@ const HomePage = () => {
               onChange={(e) => setToValue(e.target.value)}
             />
           </div>
+        </div>
+        <div className='button-container'>
+          <button className='search-button' onClick={handleSearch}>
+            Search
+          </button>
         </div>
       </div>
     </div>
