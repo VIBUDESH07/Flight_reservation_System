@@ -1,82 +1,151 @@
-/* Fetch.css */
-
 @keyframes spinner {
-    to { transform: rotate(360deg); }
-  }
-  
-  .loading-spinner {
-    display: inline-block;
-    width: 30px;  /* Smaller size */
-    height: 30px; /* Smaller size */
-    border: 3px solid rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
-    border-top-color: #000;
-    animation: spinner 0.6s linear infinite;
-    position: absolute;   /* Centering spinner */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .flight-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-   
-  }
-  
-  .flight-card {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: 3rem;
-    padding: 10px;
-    width:50%;
+  to { transform: rotate(360deg); }
+}
+
+@keyframes flightCardHover {
+  0% {
+    transform: scale(1);
     box-shadow: 0px 2px 10px -3px black;
-    border-radius: 20px;
   }
-  
-  .flight-image {
-    display: flex;
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 20px -3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spinner 0.6s linear infinite;
+  margin-right: 10px;
+}
+
+.fetching-text {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.flight-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.flight-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 3rem;
+  padding: 10px;
+  width: 50%;
+  box-shadow: 0px 2px 10px -3px black;
+  border-radius: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.flight-card:hover {
+  animation: flightCardHover 0.3s forwards;
+}
+
+.flight-image {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  margin-top: 10%;
+  justify-content: center;
+}
+
+.flight-image img {
+  width: 50%;
+  height: 20vh;
+}
+
+.flight-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-container {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-container:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.head {
+  font-weight: bolder;
+  font-family: Poppins, sans-serif;
+}
+
+.dest {
+  font-weight: 700;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.date {
+  font-weight: 600;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1024px) {
+  .flight-card {
+    width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .flight-card {
+    width: 90%;
+  }
+
+  .flight-image img {
     width: 100%;
-    height: 100px;
-    margin-top: 10%;
-    justify-content: center;
-    
+    height: auto;
   }
-  .flight-image img{
-    width:50%;
-    height:20vh;
+}
+
+@media (max-width: 576px) {
+  .flight-card {
+    grid-template-columns: 1fr;
+    width: 100%;
+    padding: 10px;
   }
-  
+
+  .flight-image {
+    margin-top: 0;
+    height: auto;
+  }
+
   .flight-details {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
   }
-  
+
   .btn-container {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
+    width: 100%;
   }
-  
-  .btn-container:hover {
-    background-color: #0056b3;
-  }
-  .head{
-    font-weight: bolder;
-    font-family: poppins;
-  }
-  .dest{
-    font-weight: 700;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    
-  }
-  .date{
-    font-weight:600;
-  }
+}
