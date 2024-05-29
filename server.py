@@ -4,13 +4,18 @@ from flask_cors import CORS
 import mysql.connector
 from mysql.connector import Error
 from google.oauth2 import id_token
-from google.auth.transport import requests
+from google.auth.transport import requests as google_requests
 import base64
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 
 app = Flask(__name__)
 CORS(app)
 
-GOOGLE_CLIENT_ID = 'your_google_client_id'
+GOOGLE_CLIENT_ID = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq.apps.googleusercontent.com'
 
 def connect_to_database():
     try:
@@ -78,7 +83,7 @@ def login():
 def google_login():
     token = request.json.get('token')
     try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
+        idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), GOOGLE_CLIENT_ID)
 
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
@@ -117,7 +122,7 @@ def get_flight_data():
         cursor = connection.cursor(dictionary=True)
 
         query = """
-        SELECT flight_name, destination, arrival, date_time, 
+        SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
                CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
         FROM flight
         WHERE destination = %s AND arrival = %s
@@ -135,6 +140,95 @@ def get_flight_data():
         if connection.is_connected():
             cursor.close()
             connection.close()
+
+def send_email(to_email, subject, message):
+    from_email = 'vibudeshrb.22cse@kongu.edu'
+    password = 'andx xznk qhsn aagi'
+
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(message, 'plain'))
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(from_email, password)
+        text = msg.as_string()
+        server.sendmail(from_email, to_email, text)
+        server.quit()
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
+@app.route('/api/book-flight', methods=['POST'])
+def book_flight():
+    flight_id = request.form['flight_id']
+    name = request.form['name']
+    email = request.form['email']
+    phone = request.form['phone']
+    date = request.form['date']
+    gender = request.form['gender']
+    no_of_people = int(request.form['no_of_people'])
+    people_genders = request.form['people_genders']
+    proof = request.files['proof']
+
+    if not os.path.exists('uploads'):
+        os.makedirs('uploads')
+
+    proof_path = os.path.join('uploads', proof.filename)
+    proof.save(proof_path)
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        # Check the current number of seats
+        cursor.execute("SELECT no_of_seats FROM flight WHERE id = %s", (flight_id,))
+        result = cursor.fetchone()
+        if not result:
+            return jsonify({"error": "Flight not found"}), 404
+
+        no_of_seats = result[0]
+        if no_of_seats < no_of_people:
+            return jsonify({"error": "Not enough seats available"}), 400
+
+        # Fetch flight name and price
+        cursor.execute("SELECT flight_name, price FROM flight WHERE id = %s", (flight_id,))
+        flight_info = cursor.fetchone()
+        if not flight_info:
+            return jsonify({"error": "Flight not found"}), 404
+
+        flight_name = flight_info[0]
+        price_per_person = flight_info[1]
+
+        # Calculate total price
+        total_price = int(price_per_person) * int(no_of_people)
+
+        # Update the number of seats
+        cursor.execute("UPDATE flight SET no_of_seats = no_of_seats - %s WHERE id = %s", (no_of_people, flight_id))
+        
+        # Insert passenger details
+        cursor.execute(
+            "INSERT INTO passengers (flight_id, name, email, phone, date, gender, no_of_people, people_genders, proof, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (flight_id, name, email, phone, date, gender, no_of_people, people_genders, proof_path, total_price)
+        )
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        # Send email confirmation
+        subject = "Flight Booking Confirmation"
+        message = f"Dear {name},\n\nYour flight booking is confirmed.\n\nDetails:\nFlight Name: {flight_name}\nTotal Price: {total_price}\nDate: {date}\nNumber of People: {no_of_people}\nGender: {gender}\nEmail: {email}\nPhone: {phone}\n\nThank you for booking with us."
+        send_email(email, subject, message)
+
+        return jsonify({"message": "Flight booked successfully"}), 200
+
+    except Error as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
