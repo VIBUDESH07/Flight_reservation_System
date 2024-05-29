@@ -57,6 +57,13 @@ const HomePage = () => {
               onChange={(e) => setToValue(e.target.value)}
             />
           </div>
+          
+          </div>
+          <div className="to-direct">
+            <input type='checkbox'
+            className='direct'
+            ></input>
+            <label>Direct Flight</label>
         </div>
       </div>
     </div>
