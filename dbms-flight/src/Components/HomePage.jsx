@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlane } from '@fortawesome/free-solid-svg-icons';
 import logoImage from '../Styles/pics/malediven[1].webp'; // Import your image
 import '../Styles/Homepage.css';
 
 const HomePage = () => {
- 
+  const [fromFocused, setFromFocused] = useState(false);
+  const [fromValue, setFromValue] = useState('');
+
   return (
     <div>
       <div className='image'>
@@ -17,13 +19,22 @@ const HomePage = () => {
           <FontAwesomeIcon icon={faPlane} className='flight-icon' />
           Flights
         </button>
-       
       </div>
       <div className='container'>
-      <button className='trip'>One-way</button>
+        <button className='trip'>One-way</button>
         <button className='trip'>Round-trip</button>
-        <input type='text' className='from' placeholder='FROM'/>
-        
+        <div className='from-container'>
+          <label className={`from-label ${fromFocused || fromValue ? 'active' : ''}`}>FROM</label>
+          <input
+            type='text'
+            className='from'
+            placeholder=''
+            value={fromValue}
+            onFocus={() => setFromFocused(true)}
+            onBlur={() => setFromFocused(false)}
+            onChange={(e) => setFromValue(e.target.value)}
+          />
+        </div>
       </div>
     </div>
   );
