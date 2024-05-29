@@ -22,7 +22,8 @@ const HomePage = () => {
       <div className='container'>
       <button className='trip'>One-way</button>
         <button className='trip'>Round-trip</button>
-        <button className='trip'>Multi-city</button>
+        <input type='text' className='from' placeholder='FROM'/>
+        
       </div>
     </div>
   );
