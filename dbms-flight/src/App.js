@@ -5,6 +5,7 @@ import HomePage from "./Components/HomePage";
 import Addflight from "./Components/Addflight";
 import Login from "./Components/Login";
 import Fetch from "./Components/Fetch";
+import Appointment from "./Components/Appointment";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path='/login' element={<Login/>}></Route>
       <Route path='/add' element={<Addflight/>}></Route>
       <Route path='/fetch' element={<Fetch/>}></Route>
+      <Route path='/appointment/:id' element={<Appointment/>}></Route>
     </Routes>
    </div>
   );
