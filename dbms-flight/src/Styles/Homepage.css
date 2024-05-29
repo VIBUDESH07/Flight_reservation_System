@@ -190,7 +190,7 @@
     flex-direction: column;
 
 }
-<<<<<<< HEAD
+
 /* Homepage.css */
 .search-button {
     margin-top: 20px;
@@ -206,11 +206,9 @@
   .search-button:hover {
     background-color: #0056b3;
   }
-  
-=======
+
 .direct{
     margin-top:17%;
     margin-left:10%;
     font-size: 300px;
 }
->>>>>>> bb50886578ccd236d147e6c1088f624abd381608
