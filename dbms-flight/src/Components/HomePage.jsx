@@ -7,6 +7,8 @@ import '../Styles/Homepage.css';
 const HomePage = () => {
   const [fromFocused, setFromFocused] = useState(false);
   const [fromValue, setFromValue] = useState('');
+  const [toFocused, setToFocused] = useState(false);
+  const [toValue, setToValue] = useState('');
 
   return (
     <div>
@@ -21,8 +23,10 @@ const HomePage = () => {
         </button>
       </div>
       <div className='container'>
-        <button className='trip'>One-way</button>
-        <button className='trip'>Round-trip</button>
+        <div className='trip-container'>
+          <button className='trip'>One-way</button>
+          <button className='trip'>Round-trip</button>
+        </div>
         <div className='from-container'>
           <label className={`from-label ${fromFocused || fromValue ? 'active' : ''}`}>FROM</label>
           <input
@@ -33,6 +37,18 @@ const HomePage = () => {
             onFocus={() => setFromFocused(true)}
             onBlur={() => setFromFocused(false)}
             onChange={(e) => setFromValue(e.target.value)}
+          />
+        </div>
+        <div className='to-container'>
+          <label className={`to-label ${toFocused || toValue ? 'active' : ''}`}>TO</label>
+          <input
+            type='text'
+            className='to'
+            placeholder=''
+            value={toValue}
+            onFocus={() => setToFocused(true)}
+            onBlur={() => setToFocused(false)}
+            onChange={(e) => setToValue(e.target.value)}
           />
         </div>
       </div>
