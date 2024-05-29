@@ -58,6 +58,17 @@ def add_flight():
         return jsonify({"message": "Flight details inserted successfully"}), 201
     else:
         return jsonify({"message": "Failed to connect to database"}), 500
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+
+    # Dummy authentication logic
+    if username == 'admin' and password == 'admin':
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False}), 401
 
 if __name__ == '__main__':
     app.run(debug=True)
