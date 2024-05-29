@@ -39,7 +39,7 @@
 }
 
 .flight-button {
-    background-color: rgba(0, 0, 0, 0.8); /* Adjust the alpha value (0.8) as needed */
+    background-color: rgba(0, 0, 0, 0.7); /* Adjust the alpha value (0.8) as needed */
     color: white;
     padding: 1rem 1.5rem;
     border: none;
@@ -91,6 +91,6 @@
     background-color: green;
     color: aliceblue;
     transition: 0.3s ease-in;
-    text-decoration: underline;
+  
 
 }

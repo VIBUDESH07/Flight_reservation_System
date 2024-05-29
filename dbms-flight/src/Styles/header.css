@@ -59,7 +59,7 @@
     pointer-events: none;
 }
 .btn{
-    margin-right: 5rem;
+    margin-right: 10rem;
 }
 
 #login {
@@ -67,13 +67,14 @@
     letter-spacing: 1px;
     margin-right: 1rem; 
     background-color: green;
+    color:aliceblue;
     border-radius: 40px;
     height: 5vh;
     width:150%;
 }
 
 #login:hover {
-    /* Add hover styles */
+    g
 }
 
 /* Responsive styles */
