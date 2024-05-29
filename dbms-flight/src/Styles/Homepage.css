@@ -183,6 +183,10 @@
     box-shadow: 0px 2px 10px -3px black;
 }
 .arrow-icon{
-    margin-right: 500px;
-    rotate: -39deg;
+    display: flex;
+    position: absolute;
+    top:37%;
+    left:35.5%;
+    flex-direction: column;
+
 }
