@@ -182,3 +182,7 @@
     font-weight: bolder;
     box-shadow: 0px 2px 10px -3px black;
 }
+.arrow-icon{
+    margin-right: 500px;
+    rotate: -39deg;
+}
