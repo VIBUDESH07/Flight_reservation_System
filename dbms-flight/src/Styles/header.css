@@ -114,7 +114,7 @@
 
 @media (max-width: 480px) {
     .navbar {
-        padding: 1rem;
+        padding: 0.5rem;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
@@ -122,14 +122,14 @@
 
     .home-icon,
     #login {
-        margin: 0.9rem 0;
+        margin: 0.5rem 0;
     }
     .btn{
         margin-right: 0.5rem;
     }
 
     .search-container {
-        width: 50%;
+        width: 30%;
     }
 
     .search {
