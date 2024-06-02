@@ -141,12 +141,13 @@ def get_flight_data():
             cursor.close()
             connection.close()
 
-def send_email(to_email, subject, message):
+def send_email(to_email, subject, message,from1):
     from_email = 'vibudeshrb.22cse@kongu.edu'
     password = 'andx xznk qhsn aagi'
 
     msg = MIMEMultipart()
-    msg['From'] = from_email
+    print(from1)
+    msg['From'] = from1
     msg['To'] = to_email
     msg['Subject'] = subject
 
@@ -195,14 +196,14 @@ def book_flight():
             return jsonify({"error": "Not enough seats available"}), 400
 
         # Fetch flight name and price
-        cursor.execute("SELECT flight_name, price FROM flight WHERE id = %s", (flight_id,))
+        cursor.execute("SELECT flight_name, price,email FROM flight WHERE id = %s", (flight_id,))
         flight_info = cursor.fetchone()
         if not flight_info:
             return jsonify({"error": "Flight not found"}), 404
 
         flight_name = flight_info[0]
         price_per_person = flight_info[1]
-
+        from1=flight_info[2]
         # Calculate total price
         total_price = int(price_per_person) * int(no_of_people)
 
@@ -222,7 +223,7 @@ def book_flight():
         # Send email confirmation
         subject = "Flight Booking Confirmation"
         message = f"Dear {name},\n\nYour flight booking is confirmed.\n\nDetails:\nFlight Name: {flight_name}\nTotal Price: {total_price}\nDate: {date}\nNumber of People: {no_of_people}\nGender: {gender}\nEmail: {email}\nPhone: {phone}\n\nThank you for booking with us."
-        send_email(email, subject, message)
+        send_email(email, subject, message,from1)
 
         return jsonify({"message": "Flight booked successfully"}), 200
 
