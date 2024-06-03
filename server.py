@@ -141,13 +141,12 @@ def get_flight_data():
             cursor.close()
             connection.close()
 
-def send_email(to_email, subject, message,from1):
+def send_email(to_email, subject, message):
     from_email = 'vibudeshrb.22cse@kongu.edu'
     password = 'andx xznk qhsn aagi'
 
     msg = MIMEMultipart()
-    print(from1)
-    msg['From'] = from1
+    msg['From'] = from_email
     msg['To'] = to_email
     msg['Subject'] = subject
 
@@ -223,7 +222,7 @@ def book_flight():
         # Send email confirmation
         subject = "Flight Booking Confirmation"
         message = f"Dear {name},\n\nYour flight booking is confirmed.\n\nDetails:\nFlight Name: {flight_name}\nTotal Price: {total_price}\nDate: {date}\nNumber of People: {no_of_people}\nGender: {gender}\nEmail: {email}\nPhone: {phone}\n\nThank you for booking with us."
-        send_email(email, subject, message,from1)
+        send_email(email, subject, message)
 
         return jsonify({"message": "Flight booked successfully"}), 200
 

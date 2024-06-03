@@ -51,13 +51,17 @@
     margin-right: 5px;
     rotate: -39deg;
 }
+.cont{
+    width: 100%;
+    
+}
 
-.container {
+.home-container {
     position: absolute;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    width: 70%;
+    width: 80%;
     height: 35vh;
     top: 50%; /* Adjust as needed */
     left: 50%;

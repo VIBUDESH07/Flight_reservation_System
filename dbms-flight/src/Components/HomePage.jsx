@@ -28,7 +28,7 @@ const HomePage = () => {
   };
 
   return (
-    <div>
+    <div className='cont'>
       <div className='image'>
         <h1>Travel for enough, you meet yourself...</h1>
         <img src={logoImage} alt='main' />
@@ -39,7 +39,7 @@ const HomePage = () => {
           Flights
         </button>
       </div>
-      <div className='container'>
+      <div className='home-container'>
         <div className='trip-container'>
           <button className='trip'>One-way</button>
           <button className='trip'>Round-trip</button>
