@@ -12,6 +12,7 @@ const HomePage = () => {
   const [toFocused, setToFocused] = useState(false);
   const [toValue, setToValue] = useState(localStorage.getItem('toValue') || '');
   const navigate = useNavigate();
+  const [selectedTrip, setSelectedTrip] = useState('one-way');
 
   useEffect(() => {
     localStorage.setItem('fromValue', fromValue);
@@ -41,8 +42,18 @@ const HomePage = () => {
       </div>
       <div className='home-container'>
         <div className='trip-container'>
-          <button className='trip'>One-way</button>
-          <button className='trip'>Round-trip</button>
+        <button
+    className={`trip ${selectedTrip === 'one-way' ? 'selected' : ''}`}
+    onClick={() => setSelectedTrip(selectedTrip === 'one-way' ? null : 'one-way')}
+  >
+    One-way
+  </button>
+  <button
+    className={`trip ${selectedTrip === 'round-trip' ? 'selected' : ''}`}
+    onClick={() => setSelectedTrip(selectedTrip === 'round-trip' ? null : 'round-trip')}
+  >
+    Round-trip
+  </button>
         </div>
         <div className='inputs-container'>
           <div className='from-container'>
@@ -79,7 +90,7 @@ const HomePage = () => {
             <input type='checkbox'
             className='direct'
             ></input>
-            <label>Direct Flight</label>
+            <label>Direct Flight Only</label>
         </div>
         <div className='button-container'>
           <button className='search-button' onClick={handleSearch}>
