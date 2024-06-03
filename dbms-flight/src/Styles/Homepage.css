@@ -197,18 +197,24 @@
 
 /* Homepage.css */
 .search-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
+    
+    padding: 10px 10px;
+    width: 150px;
+    height: 50px;
+    background-color:rgb(55,167,55);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
   }
+  .button-container{
+    margin-top: 150px;
+    margin-left: 70%;
+  }
   
   .search-button:hover {
-    background-color: #0056b3;
+    background-color:white;
   }
 
 .direct{
