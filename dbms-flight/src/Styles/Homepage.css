@@ -171,10 +171,10 @@
         color: #333;
     }
     .trip.selected {
-        background-color: green;
-        color: aliceblue;
-    }
-    
+    background-color: green;
+    color: aliceblue;
+}
+
 
     .to {
         display: block;
@@ -233,8 +233,26 @@
     }
 
 
-    .direct{
-        margin-top:17%;
-        margin-left:10%;
-        font-size: 300px;
-    }
+    
+   /* Homepage.css */
+
+.to-direct-container {
+    position: absolute;
+    top: 55%; 
+    left: 10%;
+    display: flex;
+    align-items: center;
+    margin-top: 100px;
+  }
+  
+  .to-direct {
+    margin-right: 5rem;
+  }
+  
+  .adults-dropdown {
+    font-size: 16px; 
+    padding: 8px; 
+    border-radius: 5px; 
+    border: 1px solid #ccc;
+  }
+  
