@@ -93,12 +93,16 @@ const HomePage = () => {
     <label>Direct Flight Only</label>
   </div>
   <select className="adults-dropdown">
-    <option value="1">1 Adult</option>
-    <option value="2">2 Adults</option>
-    <option value="3">3 Adults</option>
-    <option value="4">4 Adults</option>
-    <option value="5">5 Adults</option>
-    {/* Add more options as needed */}
+    <option value="1">Economy</option>
+    <option value="2">Business Class</option>
+    <option value="3">First Class</option>
+   
+  </select>
+  <select className="card-dropdown">
+    <option value="1">Debit Card</option>
+    <option value="2">UPI</option>
+    <option value="3">Credit Card</option>
+   
   </select>
 </div>
 
