@@ -51,11 +51,11 @@ const Login = () => {
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
-      <div className="login-container">
+      <div className="login-box">
         <form onSubmit={handleSubmit} className="login-form">
           <h2>Login</h2>
           {error && <p className="error-message">{error}</p>}
-          <div className="form-group">
+          <div>
             <label htmlFor="username">Username:</label>
             <input
               type="text"
@@ -65,7 +65,7 @@ const Login = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div >
             <label htmlFor="password">Password:</label>
             <input
               type="password"

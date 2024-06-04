@@ -12,6 +12,7 @@ const HomePage = () => {
   const [toFocused, setToFocused] = useState(false);
   const [toValue, setToValue] = useState(localStorage.getItem('toValue') || '');
   const navigate = useNavigate();
+  const [selectedTrip, setSelectedTrip] = useState('one-way');
 
   useEffect(() => {
     localStorage.setItem('fromValue', fromValue);
@@ -40,10 +41,20 @@ const HomePage = () => {
         </button>
       </div>
       <div className='home-container'>
-        <div className='trip-container'>
-          <button className='trip'>One-way</button>
-          <button className='trip'>Round-trip</button>
-        </div>
+      <div className='trip-container'>
+  <button
+    className={`trip ${selectedTrip === 'one-way' ? 'selected' : ''}`}
+    onClick={() => setSelectedTrip(selectedTrip === 'one-way' ? '' : 'one-way')}
+  >
+    One-way
+  </button>
+  <button
+    className={`trip ${selectedTrip === 'round-trip' ? 'selected' : ''}`}
+    onClick={() => setSelectedTrip(selectedTrip === 'round-trip' ? '' : 'round-trip')}
+  >
+    Round-trip
+  </button>
+</div>
         <div className='inputs-container'>
           <div className='from-container'>
             <label className={`from-label ${fromFocused || fromValue ? 'active' : ''}`}>FROM</label>
@@ -75,17 +86,30 @@ const HomePage = () => {
           </div>
           
           </div>
-          <div className="to-direct">
-            <input type='checkbox'
-            className='direct'
-            ></input>
-            <label>Direct Flight</label>
-        </div>
+     
+<div className="to-direct-container">
+  <div className="to-direct">
+    <input type="checkbox" className="direct" />
+    <label>Direct Flight Only</label>
+  </div>
+  <select className="adults-dropdown">
+    <option value="1">1 Adult</option>
+    <option value="2">2 Adults</option>
+    <option value="3">3 Adults</option>
+    <option value="4">4 Adults</option>
+    <option value="5">5 Adults</option>
+    {/* Add more options as needed */}
+  </select>
+</div>
+
         <div className='button-container'>
           <button className='search-button' onClick={handleSearch}>
             Search
           </button>
+          
         </div>
+        
+        
       </div>
     </div>
   );
