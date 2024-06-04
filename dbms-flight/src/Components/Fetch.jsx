@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Fetch.css';  // Ensure you have your styles in this CSS file
-
+import Header from './Header'
 const Fetch = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
@@ -49,6 +49,7 @@ const Fetch = () => {
   }
 
   return (
+  
     <div className="flight-container">
       <h2>Flight Data</h2>
       {data.map((flight, index) => (
@@ -70,6 +71,7 @@ const Fetch = () => {
             </button>
           </div>
         </div>
+        
       ))}
     </div>
   );
