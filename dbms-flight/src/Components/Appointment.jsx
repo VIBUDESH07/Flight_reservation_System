@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import '../Styles/Appointment.css'
+import '../Styles/Appointment.css';
+
 const Appointment = () => {
   const { id } = useParams();
   const [name, setName] = useState('');
@@ -34,7 +35,7 @@ const Appointment = () => {
       });
 
       if (response.ok) {
-        setBookingStatus('Flight booked successfully!');
+        setBookingStatus('success');
       } else {
         const errorData = await response.json();
         setBookingStatus(`Error: ${errorData.error}`);
@@ -45,83 +46,92 @@ const Appointment = () => {
   };
 
   return (
-    <div >
-      <h2>Appointment for Flight ID: {id}</h2>
-      <form onSubmit={handleSubmit} >
-        <div >
-          <label>Name:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+    <div className="app-body">
+      {bookingStatus === 'success' ? (
+        <div className="container success-message">
+          <div className="tick">✓</div>
+          <p>Ticket booked successfully!</p>
         </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      ) : (
+        <div className="container">
+          <h2>Appointment for Flight </h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Name:</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Email:</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Phone:</label>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Date:</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Gender:</label>
+              <select value={gender} onChange={(e) => setGender(e.target.value)} required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label>Number of People:</label>
+              <input
+                type="number"
+                value={noOfPeople}
+                onChange={(e) => setNoOfPeople(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Genders of People:</label>
+              <input
+                type="text"
+                value={peopleGenders}
+                onChange={(e) => setPeopleGenders(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Upload Proof:</label>
+              <input
+                type="file"
+                onChange={(e) => setProof(e.target.files[0])}
+                required
+              />
+            </div>
+            <button type="submit">Book Flight</button>
+          </form>
+          {bookingStatus && <p className="error-message">{bookingStatus}</p>}
         </div>
-        <div>
-          <label>Phone:</label>
-          <input
-            type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Date:</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Gender:</label>
-          <select value={gender} onChange={(e) => setGender(e.target.value)} required>
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label>Number of People:</label>
-          <input
-            type="number"
-            value={noOfPeople}
-            onChange={(e) => setNoOfPeople(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Genders of People:</label>
-          <input
-            type="text"
-            value={peopleGenders}
-            onChange={(e) => setPeopleGenders(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Upload Proof:</label>
-          <input
-            type="file"
-            onChange={(e) => setProof(e.target.files[0])}
-            required
-          />
-        </div>
-        <button type="submit">Book Flight</button>
-      </form>
-      {bookingStatus && <p>{bookingStatus}</p>}
+      )}
     </div>
   );
 };
