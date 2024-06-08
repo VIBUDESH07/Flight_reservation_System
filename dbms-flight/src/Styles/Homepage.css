@@ -1,4 +1,4 @@
-    .image {
+    .image1 {
         position: relative;
         justify-content: center;
         align-items: center;
@@ -6,7 +6,7 @@
         border-radius: 50%;
     }
 
-    .image img {
+    .image1 img {
         position: absolute;
         top: 0;
         left: 0;
@@ -16,7 +16,7 @@
         border-radius: 0% 0% 10% 10%;
     }
 
-    .image h1 {
+    .image1 h1 {
         position: absolute;
         top: 30%;
         left: 50%;
@@ -30,7 +30,7 @@
 
     .button-container {
         position: absolute;
-        top: 45%; /* Adjust as needed */
+        top: -12%; /* Adjust as needed */
         left:18%;
         transform: translateX(-50%);
         text-align: center;
@@ -238,7 +238,7 @@
 
 .to-direct-container {
     position: absolute;
-    top: 55%; 
+    top: 35%; 
     left: 10%;
     display: flex;
     align-items: center;
