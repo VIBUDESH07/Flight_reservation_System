@@ -6,10 +6,12 @@ import Login from "./Components/Login";
 import Fetch from "./Components/Fetch";
 import Appointment from "./Components/Appointment";
 import ErrorPage from "./Components/Error";
+// import Sidebar from "./Components/Sidebar"; // Correct import path
 
 function App() {
   return (
     <div>
+      {/* <Sidebar /> Add Sidebar component to your app */}
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} /> {/* Default route */}
