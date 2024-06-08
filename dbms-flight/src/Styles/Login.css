@@ -6,7 +6,8 @@ body{
   background-position: center;
   font-family: sans-serif;
  }
- .loginbox{
+ .login-box{
+    margin-top: 5%;
  width: 320;
  height: 420;
  background: white;
