@@ -211,9 +211,10 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 16px;
+        margin-top: -80px;
     }
     .button-container{
-        margin-top: 150px;
+        margin-top: 130px;
         margin-left: 70%;
     }
 
@@ -258,7 +259,8 @@
     height: 50px;
     padding: 8px; 
     border-radius: 5px; 
-    margin-left: 200px;
+    margin-left: 20px;
+    margin-top: -30px;
     border: 1px solid #000000;
     background-color: white;
   }
@@ -269,6 +271,7 @@
     padding: 8px; 
     border-radius: 5px; 
     margin-left: 130px;
+    margin-top: -30px;
     border: 1px solid #000000;
     background-color: white;
   }
