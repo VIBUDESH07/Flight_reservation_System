@@ -50,7 +50,7 @@ const Header = () => {
     <div className='navbar'>
       <Link to='/home' className='logo-container'>
         <h5 className='logo'>Let's</h5>
-        <FontAwesomeIcon icon={faPlane} className='home-icon' />
+        <FontAwesomeIcon icon={faPlane} className='home-icon' />  
         <h5 className='logo'>Travel</h5>
       </Link>
       <div className='search-container'>
