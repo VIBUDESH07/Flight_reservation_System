@@ -30,16 +30,11 @@ const HomePage = () => {
 
   return (
     <div className='cont'>
-      <div className='image'>
+      <div className='image1'>
         <h1>Travel for enough, you meet yourself...</h1>
         <img src={logoImage} alt='main' />
       </div>
-      <div className='button-container'>
-        <button className='flight-button'>
-          <FontAwesomeIcon icon={faPlane} className='flight-icon' />
-          Flights
-        </button>
-      </div>
+     
       <div className='home-container'>
       <div className='trip-container'>
   <button
@@ -84,6 +79,12 @@ const HomePage = () => {
               onChange={(e) => setToValue(e.target.value)}
             />
           </div>
+          <div className='button-container'>
+          <button className='search-button' onClick={handleSearch}>
+            Search
+          </button>
+          
+        </div>
           
           </div>
      
@@ -106,12 +107,7 @@ const HomePage = () => {
   </select>
 </div>
 
-        <div className='button-container'>
-          <button className='search-button' onClick={handleSearch}>
-            Search
-          </button>
-          
-        </div>
+        
         
         
       </div>
