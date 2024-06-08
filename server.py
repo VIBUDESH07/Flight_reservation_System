@@ -9,8 +9,6 @@ import base64
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 
 app = Flask(__name__)
 CORS(app)
@@ -44,7 +42,10 @@ def add_flight():
     destination = request.form['destination']
     arrival = request.form['arrival']
     date_time = request.form['dateTime']
+    no_of_seats = request.form['noOfSeats']
+    email = request.form['email']
     flight_img = request.files['flightImg']
+    price= request.form['price']
 
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
@@ -57,9 +58,9 @@ def add_flight():
     connection = connect_to_database()
     if connection:
         cursor = connection.cursor()
-        sql_insert_query = """INSERT INTO flight (flight_name, destination, arrival, flight_img, date_time)
-                              VALUES (%s, %s, %s, %s, %s)"""
-        record_tuple = (flight_name, destination, arrival, binary_img, date_time)
+        sql_insert_query = """INSERT INTO flight (flight_name, destination, arrival, flight_img, date_time, no_of_seats, email,price)
+                              VALUES (%s, %s, %s, %s, %s, %s, %s,%s)"""
+        record_tuple = (flight_name, destination, arrival, binary_img, date_time, no_of_seats, email,price)
         cursor.execute(sql_insert_query, record_tuple)
         connection.commit()
         connection.close()
@@ -74,10 +75,26 @@ def login():
     username = data['username']
     password = data['password']
 
-    if username == 'admin' and password == 'admin':
-        return jsonify({'success': True})
-    else:
-        return jsonify({'success': False}), 401
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM login WHERE username = %s AND password = %s", (username, password))
+        user = cursor.fetchone()
+
+        if user:
+            return jsonify({'success': True, 'role': user['role'], 'email':user['email']})
+        else:
+            return jsonify({'success': False}), 401
+
+    except Error as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
 @app.route('/api/google-login', methods=['POST'])
 def google_login():
@@ -94,16 +111,16 @@ def google_login():
 
         connection = connect_to_database()
         if connection:
-            cursor = connection.cursor()
+            cursor = connection.cursor(dictionary=True)
             cursor.execute("SELECT * FROM users WHERE google_id = %s", (userid,))
             user = cursor.fetchone()
 
             if user:
-                return jsonify({"success": True})
+                return jsonify({"success": True, "role": user['role']})
             else:
-                cursor.execute("INSERT INTO users (google_id, email, name) VALUES (%s, %s, %s)", (userid, email, name))
+                cursor.execute("INSERT INTO users (google_id, email, name, role) VALUES (%s, %s, %s, 'passenger')", (userid, email, name))
                 connection.commit()
-                return jsonify({"success": True})
+                return jsonify({"success": True, "role": 'passenger'})
 
     except ValueError:
         return jsonify({"success": False}), 400
@@ -161,6 +178,35 @@ def send_email(to_email, subject, message):
         server.quit()
     except Exception as e:
         print(f"Failed to send email: {e}")
+@app.route('/api/cancel-booking', methods=['POST'])
+def cancel_booking():
+    data = request.json
+    booking_id = data.get('bookingId')
+    flight_id = data.get('flightId')
+    no_of_people = data.get('noOfPeople')
+
+    if not booking_id or not flight_id or not no_of_people:
+        return jsonify({'error': 'Invalid data'}), 400
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        # Delete the booking
+        cursor.execute("DELETE FROM passengers WHERE id = %s", (booking_id,))
+        
+        # Update the number of seats
+        cursor.execute("UPDATE flight SET no_of_seats = no_of_seats + %s WHERE id = %s", (no_of_people, flight_id))
+
+        connection.commit()
+        return jsonify({'success': True})
+    except Error as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
 
 @app.route('/api/book-flight', methods=['POST'])
 def book_flight():
@@ -195,14 +241,14 @@ def book_flight():
             return jsonify({"error": "Not enough seats available"}), 400
 
         # Fetch flight name and price
-        cursor.execute("SELECT flight_name, price,email FROM flight WHERE id = %s", (flight_id,))
+        cursor.execute("SELECT flight_name, price, email FROM flight WHERE id = %s", (flight_id,))
         flight_info = cursor.fetchone()
         if not flight_info:
             return jsonify({"error": "Flight not found"}), 404
 
         flight_name = flight_info[0]
         price_per_person = flight_info[1]
-        from1=flight_info[2]
+        from1 = flight_info[2]
         # Calculate total price
         total_price = int(price_per_person) * int(no_of_people)
 
@@ -229,6 +275,113 @@ def book_flight():
     except Error as e:
         print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/bookings', methods=['GET'])
+def get_bookings_by_email():
+    email = request.args.get('email')
+    print(email)
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM passengers WHERE email = %s", (email,))
+        bookings = cursor.fetchall()
+
+        for booking in bookings:
+            booking['id'] = str(booking['id'])
+
+        return jsonify(bookings)
+    except Error as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+@app.route('/api/flight-detail-admin', methods=['GET'])
+def get_details():
+    # Your existing code to fetch flight details from the database
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+        SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
+               CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
+        FROM flight
+        """
+        cursor.execute(query)
+        flight_data = cursor.fetchall()
+
+        return jsonify(flight_data), 200
+
+    except Error as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+
+@app.route('/api/update-flt/<int:flight_id>', methods=['GET', 'PUT'])
+def update_flight(flight_id):
+    if request.method == 'GET':
+        # Retrieve flight details
+        try:
+            connection = connect_to_database()
+            if connection:
+                cursor = connection.cursor(dictionary=True)
+                cursor.execute("SELECT flight_name, price, no_of_seats, destination, arrival, date_time, email, TO_BASE64(flight_img) AS flight_img_base64 FROM flight WHERE id = %s", (flight_id,))
+                flight = cursor.fetchone()
+                cursor.close()
+                connection.close()
+                if flight:
+                    return jsonify(flight), 200
+                else:
+                    return jsonify({"error": "Flight not found"}), 404
+            else:
+                return jsonify({"error": "Failed to connect to the database"}), 500
+        except Error as e:
+            return jsonify({"error": str(e)}), 500
+    elif request.method == 'PUT':
+        # Update flight details
+        try:
+            updated_flight_details = request.json
+
+            connection = connect_to_database()
+            if connection:
+                cursor = connection.cursor()
+
+                sql_update_query = """
+                UPDATE flight
+                SET flight_name = %s, destination = %s, arrival = %s, date_time = %s,
+                    no_of_seats = %s, email = %s, price = %s
+                WHERE id = %s
+                """
+                cursor.execute(sql_update_query, (
+                    updated_flight_details.get('flightName'),
+                    updated_flight_details.get('destination'),
+                    updated_flight_details.get('arrival'),
+                    updated_flight_details.get('dateTime'),
+                    updated_flight_details.get('noOfSeats'),
+                    updated_flight_details.get('email'),
+                    updated_flight_details.get('price'),
+                    flight_id
+                ))
+
+                connection.commit()
+                cursor.close()
+                connection.close()
+
+                return jsonify({"message": "Flight details updated successfully"}), 200
+            else:
+                return jsonify({"error": "Failed to connect to the database"}), 500
+        except Error as e:
+            return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
