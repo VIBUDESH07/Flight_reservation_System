@@ -1,0 +1,91 @@
+/* UpdateFlight.css */
+
+.update-body {
+    display: flex;
+    margin-top: 6%;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  
+    padding: 20px;
+  }
+  
+  .update-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .update-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+    font-weight: bold;
+  }
+  
+  .update-form input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  .update-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .update-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .update-container {
+      padding: 15px;
+    }
+  
+    .update-form input {
+      font-size: 14px;
+    }
+  
+    .update-button {
+      font-size: 14px;
+    }
+  }
+  
