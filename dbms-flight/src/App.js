@@ -6,6 +6,9 @@ import Login from "./Components/Login";
 import Fetch from "./Components/Fetch";
 import Appointment from "./Components/Appointment";
 import ErrorPage from "./Components/Error";
+import PassengerDetails from "./Components/PassengerDetails";
+import AdminPage from "./Components/AdminPage";
+import UpdateFlight from "./Components/UpdateFlight";
 
 function App() {
   return (
@@ -16,7 +19,10 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="add" element={<Addflight />} />
           <Route path="fetch" element={<Fetch />} />
+          <Route path="passenger" element={<PassengerDetails />} />
           <Route path="appointment/:id" element={<Appointment />} />
+          <Route path="update-flight/:id" element={<UpdateFlight/>} />
+          <Route path="admin" element={<AdminPage />} />
           <Route path="*" element={<ErrorPage />} /> {/* Catch-all route for 404 */}
         </Route>
       </Routes>
