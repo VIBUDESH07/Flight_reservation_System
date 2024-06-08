@@ -23,13 +23,21 @@
     align-items: center;
     text-decoration: none;
     color: inherit;
+    
 }
 
 
-.logo {
+.logo1 {
     margin: 0;
     padding: 0;
     font-size: 1.2rem; /* Adjust font size as needed */
+    margin-left: 100px;
+}
+.logo2 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem; /* Adjust font size as needed */
+    /* margin-left: 10  0px; */
 }
 
 .home-icon {
@@ -54,7 +62,7 @@
 .search-icon {
     position: absolute;
     right: 0.5rem; /* Adjust based on your preference */
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     pointer-events: none;
 }
