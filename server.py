@@ -360,7 +360,7 @@ def send_otp():
     if not email:
         return jsonify({'error': 'Email is required'}), 400
 
-    # Generate OTP
+   
     otp = generate_otp()
 
     # Store OTP in otp_storage
@@ -422,7 +422,6 @@ def verify_otp(email, otp):
 @app.route('/api/update-flt/<int:flight_id>', methods=['GET', 'PUT'])
 def update_flight(flight_id):
     if request.method == 'GET':
-        # Retrieve flight details
         try:
             connection = connect_to_database()
             if connection:
@@ -440,7 +439,6 @@ def update_flight(flight_id):
         except Error as e:
             return jsonify({"error": str(e)}), 500
     elif request.method == 'PUT':
-        # Update flight details
         try:
             updated_flight_details = request.json
 

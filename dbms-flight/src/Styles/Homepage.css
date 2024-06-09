@@ -30,7 +30,7 @@
 
     .button-container {
         position: absolute;
-        top: -12%; /* Adjust as needed */
+        top: -2%; /* Adjust as needed */
         left:18%;
         transform: translateX(-50%);
         text-align: center;
