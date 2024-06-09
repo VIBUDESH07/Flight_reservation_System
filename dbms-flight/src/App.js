@@ -10,25 +10,25 @@ import PassengerDetails from "./Components/PassengerDetails";
 import AdminPage from "./Components/AdminPage";
 import UpdateFlight from "./Components/UpdateFlight";
 import SignUp from "./Components/SignUp";
- import Sidebar from "./Components/Sidebar"; // Correct import path
+import Sidebar from "./Components/Sidebar"; // Correct import path
+import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 
 function App() {
   return (
     <div>
-      
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} /> {/* Default route */}
+          <Route index element={<HomePage />} />
           <Route path="login" element={<Login />} />
-          <Route path="add" element={<Addflight />} />
+          <Route path="add" element={<ProtectedRoute element={Addflight} requiredRole="admin" />} />
           <Route path="fetch" element={<Fetch />} />
           <Route path="passenger" element={<PassengerDetails />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="appointment/:id" element={<Appointment />} />
-          <Route path="update-flight/:id" element={<UpdateFlight/>} />
-          <Route path="admin" element={<AdminPage />} />
-          <Route path="home" element={<Sidebar/>}/>
-          <Route path="*" element={<ErrorPage />} /> {/* Catch-all route for 404 */}
+          <Route path="update-flight/:id" element={<ProtectedRoute element={UpdateFlight} requiredRole="admin" />} />
+          <Route path="admin" element={<ProtectedRoute element={AdminPage} requiredRole="admin" />} />
+          <Route path="home" element={<Sidebar />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
     </div>
