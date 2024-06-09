@@ -111,7 +111,7 @@
     .from-label {
         position: absolute;
         left: 15px;
-        top: 50%;
+        top: 40%;
         transform: translateY(-50%);
         font-family: Poppins;
         font-size: 18px;
@@ -153,7 +153,7 @@
     .to-label {
         position: absolute;
         left: 15px;
-        top: 50%;
+        top: 40%;
         transform: translateY(-50%);
         font-family: Poppins;
         font-size: 18px;
@@ -194,7 +194,7 @@
         display: flex;
         position: absolute;
         top:37%;
-        left:35.5%;
+        left:34%;
         flex-direction: column;
 
     }
