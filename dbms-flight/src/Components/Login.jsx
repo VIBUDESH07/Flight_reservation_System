@@ -20,9 +20,8 @@ const Login = () => {
       if (response.data.success) {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('role', response.data.role);
-        console.log(response.data.email)
-        localStorage.setItem('email', response.data.email); // Store the email in localStorage
-        document.dispatchEvent(new Event('loginStatusChanged')); // Dispatch custom event
+        localStorage.setItem('email', response.data.email);
+        document.dispatchEvent(new Event('loginStatusChanged'));
         if (response.data.role === 'admin') {
           navigate('/admin');
         } else {
@@ -47,8 +46,8 @@ const Login = () => {
       if (result.data.success) {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('role', result.data.role);
-        localStorage.setItem('email', result.data.email); // Store the email in localStorage
-        document.dispatchEvent(new Event('loginStatusChanged')); // Dispatch custom event
+        localStorage.setItem('email', result.data.email);
+        document.dispatchEvent(new Event('loginStatusChanged'));
         if (result.data.role === 'admin') {
           navigate('/admin');
         } else {
@@ -69,6 +68,10 @@ const Login = () => {
     setError('Google login failed');
     localStorage.setItem('isLoggedIn', 'false');
     console.error(response);
+  };
+
+  const handleSignUp = () => {
+    navigate('/signup');
   };
 
   return (
@@ -102,9 +105,9 @@ const Login = () => {
               onSuccess={handleGoogleSuccess}
               onFailure={handleGoogleFailure}
             />
-            <br></br>
           </div>
           <button type="submit" className="submit-button">Login</button>
+          <button type="button" className="signup" onClick={handleSignUp}>Sign Up</button>
         </form>
       </div>
     </GoogleOAuthProvider>
