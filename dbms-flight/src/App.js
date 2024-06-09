@@ -10,12 +10,12 @@ import PassengerDetails from "./Components/PassengerDetails";
 import AdminPage from "./Components/AdminPage";
 import UpdateFlight from "./Components/UpdateFlight";
 import SignUp from "./Components/SignUp";
-// import Sidebar from "./Components/Sidebar"; // Correct import path
+ import Sidebar from "./Components/Sidebar"; // Correct import path
 
 function App() {
   return (
     <div>
-      {/* <Sidebar /> Add Sidebar component to your app */}
+      
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} /> {/* Default route */}
@@ -27,6 +27,7 @@ function App() {
           <Route path="appointment/:id" element={<Appointment />} />
           <Route path="update-flight/:id" element={<UpdateFlight/>} />
           <Route path="admin" element={<AdminPage />} />
+          <Route path="home" element={<Sidebar/>}/>
           <Route path="*" element={<ErrorPage />} /> {/* Catch-all route for 404 */}
         </Route>
       </Routes>
