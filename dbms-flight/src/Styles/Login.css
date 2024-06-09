@@ -42,6 +42,10 @@ body{
  width: 100%;
  margin-bottom: 20px;
  }
+ .signup{
+    margin-top: 4px;
+    background-color: green;
+ }
  
  .loginbox input[type="text"],input[type="password"]
  {
@@ -80,5 +84,8 @@ body{
      transition: 0.3s;
      border-color:  rgb(49, 123, 49);
      box-shadow: 0px 0px 3px rgb(49, 123, 49);
+ }
+ .submit-button{
+    margin-top: 5px;
  }
  
