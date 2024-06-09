@@ -30,7 +30,7 @@ const HomePage = () => {
 
   return (
     <div className='cont'>
-
+      
       <div className='image1'>
        {/* Add Sidebar component here */}
       <div className='image'>
