@@ -33,17 +33,21 @@ body{
  top: -50px;
  left: calc(50% - 50px);
  }
+ .login-box h2
+ {
+    margin-bottom: 30px;
+ }
  .loginbox p{
- margin: 0;
+ margin:0;
  padding: 0;
  font-weight: bold;
  }
  .loginbox input{
  width: 100%;
- margin-bottom: 20px;
+ /* margin-bottom: 10px; */
  }
  .signup{
-    margin-top: 4px;
+    margin-top: 15px;
     background-color: green;
  }
  
@@ -57,6 +61,7 @@ body{
  height: 40px;
  color: black;
  font-size: 16px;
+ 
  }
  .loginbox input[type="submit"]
  {
@@ -86,6 +91,6 @@ body{
      box-shadow: 0px 0px 3px rgb(49, 123, 49);
  }
  .submit-button{
-    margin-top: 5px;
+    margin-top: 13px;
  }
  
