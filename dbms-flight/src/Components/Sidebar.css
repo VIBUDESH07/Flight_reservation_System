@@ -1,0 +1,34 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    padding-left: 25px;
+    padding-top: 50px;
+  }
+  
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-section {
+    text-align: center;
+  }
+  
+  .search-container {
+    padding: 1rem;
+  }
+  
+  .search-container .MuiInputBase-root {
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%;
+    }
+  }
+  
