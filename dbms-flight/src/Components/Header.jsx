@@ -7,7 +7,7 @@ import '../Styles/header.css';
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false); // State to toggle Sidebar
+  const [sidebarOpen, setSidebarOpen] = useState(false); // State to toggle Sidebar
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,14 +40,17 @@ const Header = () => {
     navigate('/login'); // Redirect to login page
   };
 
-  const toggleSidebar = () => {
-    setShowSidebar(!showSidebar); // Toggle Sidebar visibility
+  const toggleSidebar = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setSidebarOpen(open);
   };
 
   return (
     <div>
       <div className='navbar'>
-        <div className='logo-container' onClick={toggleSidebar}>
+        <div className='logo-container' onClick={toggleSidebar(true)}>
           <h5 className='logo1'>Let's</h5>
           <FontAwesomeIcon icon={faPlane} className='home-icon' />
           <h5 className='logo2'>Travel</h5>
@@ -64,7 +67,7 @@ const Header = () => {
           )}
         </div>
       </div>
-      {showSidebar && <Sidebar />} {/* Conditionally render Sidebar */}
+      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} /> {/* Pass props to Sidebar */}
     </div>
   );
 };
