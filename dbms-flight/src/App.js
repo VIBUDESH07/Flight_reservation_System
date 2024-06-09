@@ -10,10 +10,12 @@ import PassengerDetails from "./Components/PassengerDetails";
 import AdminPage from "./Components/AdminPage";
 import UpdateFlight from "./Components/UpdateFlight";
 import SignUp from "./Components/SignUp";
+// import Sidebar from "./Components/Sidebar"; // Correct import path
 
 function App() {
   return (
     <div>
+      {/* <Sidebar /> Add Sidebar component to your app */}
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} /> {/* Default route */}
