@@ -1,0 +1,39 @@
+.sidebar {
+  width: 250px;
+}
+
+.sidebar .list-item {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .list-item-icon {
+  min-width: 36px;
+  color: green;
+}
+
+.sidebar .list-item-text {
+  font-size: 16px;
+  color: black;
+}
+
+.sidebar .divider {
+  margin: 12px 0;
+}
+
+/* Adjustments for active link */
+.sidebar .active-link {
+  background-color: lightgray;
+  font-weight: bold;
+}
+
+.sidebar .active-link .list-item-text {
+  font-size: 16px;
+  color: red;
+}
+
+.sidebar .active-link .list-item-icon {
+  min-width: 36px;
+  color: red;
+}

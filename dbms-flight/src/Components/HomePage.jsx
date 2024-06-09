@@ -30,17 +30,14 @@ const HomePage = () => {
 
   return (
     <div className='cont'>
-      <Sidebar /> {/* Add Sidebar component here */}
+      
+      <div className='image1'>
+       {/* Add Sidebar component here */}
       <div className='image'>
         <h1>Travel for enough, you meet yourself...</h1>
         <img src={logoImage} alt='main' />
       </div>
-      <div className='button-container'>
-        <button className='flight-button'>
-          <FontAwesomeIcon icon={faPlane} className='flight-icon' />
-          Flights
-        </button>
-      </div>
+     
       <div className='home-container'>
         <div className='trip-container'>
           <button
@@ -85,6 +82,17 @@ const HomePage = () => {
               onChange={(e) => setToValue(e.target.value)}
             />
           </div>
+
+          <div className='button-container'>
+          <button className='search-button' onClick={handleSearch}>
+            Search
+          </button>
+          
+        </div>
+          
+          </div>        
+        
+        
         </div>
         <div className="to-direct-container">
           <div className="to-direct">
@@ -102,11 +110,7 @@ const HomePage = () => {
             <option value="3">Credit Card</option>
           </select>
         </div>
-        <div className='button-container'>
-          <button className='search-button' onClick={handleSearch}>
-            Search
-          </button>
-        </div>
+       
       </div>
     </div>
   );

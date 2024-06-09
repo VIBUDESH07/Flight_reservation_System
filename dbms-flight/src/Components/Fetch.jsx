@@ -36,7 +36,12 @@ const Fetch = () => {
   }, []);
 
   const handleAppointment = (flightId) => {
-    navigate(`/appointment/${flightId}`);
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+      navigate(`/appointment/${flightId}`);
+    } else {
+      navigate('/login');
+    }
   };
 
   if (!data) {

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import '../Styles/Login.css';
 
-const clientId = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq.apps.googleusercontent.com'; 
+const clientId = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -18,12 +18,22 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/login', { username, password });
       if (response.data.success) {
-        navigate('/add');
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('role', response.data.role);
+        localStorage.setItem('email', response.data.email);
+        document.dispatchEvent(new Event('loginStatusChanged'));
+        if (response.data.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/passenger');
+        }
       } else {
         setError('Invalid credentials');
+        localStorage.setItem('isLoggedIn', 'false');
       }
     } catch (error) {
       setError('An error occurred. Please try again.');
+      localStorage.setItem('isLoggedIn', 'false');
       console.error(error);
     }
   };
@@ -34,19 +44,34 @@ const Login = () => {
         token: response.credential
       });
       if (result.data.success) {
-        navigate('/add');
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('role', result.data.role);
+        localStorage.setItem('email', result.data.email);
+        document.dispatchEvent(new Event('loginStatusChanged'));
+        if (result.data.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/passenger');
+        }
       } else {
         setError('Google login failed');
+        localStorage.setItem('isLoggedIn', 'false');
       }
     } catch (error) {
       setError('An error occurred. Please try again.');
+      localStorage.setItem('isLoggedIn', 'false');
       console.error(error);
     }
   };
 
   const handleGoogleFailure = (response) => {
     setError('Google login failed');
+    localStorage.setItem('isLoggedIn', 'false');
     console.error(response);
+  };
+
+  const handleSignUp = () => {
+    navigate('/signup');
   };
 
   return (
@@ -65,7 +90,7 @@ const Login = () => {
               required
             />
           </div>
-          <div >
+          <div>
             <label htmlFor="password">Password:</label>
             <input
               type="password"
@@ -76,15 +101,14 @@ const Login = () => {
             />
           </div>
           <div className="google-login">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onFailure={handleGoogleFailure}
-          />
-          <br></br>
-        </div>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onFailure={handleGoogleFailure}
+            />
+          </div>
           <button type="submit" className="submit-button">Login</button>
+          <button type="button" className="signup" onClick={handleSignUp}>Sign Up</button>
         </form>
-        
       </div>
     </GoogleOAuthProvider>
   );

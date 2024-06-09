@@ -1,0 +1,57 @@
+.adminpage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; /* Add padding */
+  }
+  
+  .flight-list {
+    
+    list-style: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .flight-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    border:2px solid black;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Add margin bottom */
+    background-color: #f9f9f9; /* Add background color for better readability */
+    padding: 20px; /* Add padding */
+    border-radius: 10px; /* Add border radius for a rounded look */
+  }
+  
+  .flight-details {
+    width: 60%; /* Adjust width */
+  }
+  
+  .flight-image {
+ /* Adjust width */
+    text-align: center; /* Align image to center */
+  }
+  
+  .flight-image img {
+    max-width: 100%; /* Ensure image doesn't exceed container width */
+    max-height: 200px; /* Limit image height */
+    border-radius: 5px; /* Add border radius */
+  }
+  
+  .add-flight-button {
+    margin-top: 20px;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+  }
+  
+  .add-flight-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error-message {
+    color: red;
+  }
+  

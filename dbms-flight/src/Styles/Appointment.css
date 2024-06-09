@@ -1,50 +1,119 @@
-/* Styles for Appointment component */
+/* General styling */
+.app-body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  margin-top: 13%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+/* Container for the form */
+.app-body .container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Form title */
+.app-body .container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form styling */
+.app-body .container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-body .container form div {
+  margin-bottom: 15px;
+}
+
+.app-body .container form label {
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.app-body .container form input,
+.app-body .container form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.app-body .container form button {
+  padding: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.app-body .container form button:hover {
+  background-color: #45a049;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .app-body .container {
+    width: 90%;
   }
-  
-  form {
-    display: flex;
-    flex-direction: column;
+}
+
+/* Success message styling */
+.app-body .success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.app-body .success-message p {
+  font-size: 1.5em;
+  color: #4CAF50;
+}
+
+.app-body .success-message .tick {
+  font-size: 4em;
+  color: #4CAF50;
+  animation: bounce 0.5s ease-in-out;
+}
+
+/* Keyframes for animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  label {
-    margin-bottom: 8px;
+  to {
+    opacity: 1;
   }
-  
-  input, select {
-    margin-bottom: 16px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
   }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  40% {
+    transform: translateY(-30px);
   }
-  
-  button:hover {
-    background-color: #0056b3;
+  60% {
+    transform: translateY(-15px);
   }
-  
-  .loading {
-    display: none;
-  }
-  
-  .loading.visible {
-    display: block;
-    margin-top: 20px;
-    padding: 20px;
-    text-align: center;
-    background-color: #f0f0f0;
-    border-radius: 4px;
-  }
-  
+}
