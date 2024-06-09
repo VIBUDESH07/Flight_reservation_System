@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlane, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import logoImage from '../Styles/pics/malediven[1].webp'; // Import your image
 import '../Styles/Homepage.css';
-import Sidebar from './Sidebar'; // Import Sidebar component
+// import Sidebar from './Sidebar'; // Import Sidebar component
 
 const HomePage = () => {
   const [fromFocused, setFromFocused] = useState(false);
