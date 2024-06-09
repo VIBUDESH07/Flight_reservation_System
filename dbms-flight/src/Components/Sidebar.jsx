@@ -7,16 +7,29 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText'; // Add this import
+import ListItemText from '@mui/material/ListItemText';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Typography from '@mui/material/Typography';
+import Switch from '@mui/material/Switch';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import SearchIcon from '@mui/icons-material/Search';
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import TripOriginIcon from '@mui/icons-material/TripOrigin';
+import SupportIcon from '@mui/icons-material/Support';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
+import './Sidebar.css';
 
 const Sidebar = () => {
   const [state, setState] = React.useState({
-    
     left: false,
-   
   });
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -26,20 +39,66 @@ const Sidebar = () => {
     setState({ ...state, [anchor]: open });
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === 'left' || anchor === 'left' ? 'auto' : 250 }}
+      sx={{ width: 250 }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+      <Box className="profile-section" sx={{ padding: '1rem', textAlign: 'center' }}>
+        <AccountCircleIcon sx={{ fontSize: 50 }} />
+        <Typography variant="h6">John Doe</Typography>
+        <Typography variant="body2">Gold Member</Typography>
+      </Box>
+      <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        {[
+          { text: 'Home', icon: <HomeIcon /> },
+          { text: 'Book Flight', icon: <FlightTakeoffIcon /> },
+          { text: 'My Trips', icon: <TripOriginIcon /> },
+          { text: 'Check-in', icon: <InboxIcon /> },
+          { text: 'Flight Status', icon: <InboxIcon /> },
+          { text: 'Support', icon: <SupportIcon /> }
+        ].map((item, index) => (
+          <ListItem key={item.text} disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {item.icon}
               </ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <Box className="search-container" sx={{ padding: '1rem' }}>
+        <TextField 
+          variant="outlined"
+          placeholder="Search flights..."
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+      <Divider />
+      <List>
+        <ListItem>
+          <ListItemText primary="Upcoming Trips" />
+        </ListItem>
+        <Divider />
+        {['Trip to New York', 'Trip to London'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -47,34 +106,49 @@ const Sidebar = () => {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem>
+          <ListItemText primary="Settings" />
+        </ListItem>
+        <Divider />
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Account Settings" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Privacy Settings" />
+          </ListItemButton>
+        </ListItem>
       </List>
+      <Divider />
+      
+      <Divider />
+      <Box sx={{ padding: '1rem', textAlign: 'center' }}>
+        <Typography>Dark Mode</Typography>
+        <Switch checked={isDarkMode} onChange={toggleDarkMode} />
+      </Box>
     </Box>
   );
 
   return (
-    <div>
-      {['left'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            {list(anchor)}
-          </Drawer>
-        </React.Fragment>
-      ))}
+    <div className="sidebar">
+      <Button onClick={toggleDrawer('left', true)}>
+        <MenuIcon />
+      </Button>
+      <Drawer
+        anchor="left"
+        open={state.left}
+        onClose={toggleDrawer('left', false)}
+      >
+        {list('left')}
+      </Drawer>
     </div>
   );
 };
