@@ -48,25 +48,6 @@ const Header = () => {
   };
 
   return (
-
-    <div className='navbar'>
-      <Link to='/HomePage' className='logo-container'>
-        <h5 className='logo1'>Let's</h5>
-        <FontAwesomeIcon icon={faPlane} className='home-icon' />  
-        <h5 className='logo2'>Travel</h5>
-      </Link>
-      <div className='search-container'>
-        <input type='text' className='search' placeholder='   Search for Flights' />
-        <FontAwesomeIcon icon={faSearch} className='search-icon' />
-      </div>
-      <div className='btn'>
-        {isLoggedIn ? (
-          <button id="logout" onClick={handleAuthClick}>Log out</button>
-        ) : (
-          <Link to='/login'>
-            <button id="login" onClick={handleAuthClick}>Log in</button>
-          </Link>
-        )}
     <div>
       <div className='navbar'>
         <div className='logo-container' onClick={toggleSidebar(true)}>
@@ -75,7 +56,7 @@ const Header = () => {
           <h5 className='logo2'>Travel</h5>
         </div>
         <div className='search-container'>
-          <input type='text' className='search' placeholder='Search...' />
+          <input type='text' className='search' placeholder='Search For Flights..' />
           <FontAwesomeIcon icon={faSearch} className='search-icon' />
         </div>
         <div className='btn'>
