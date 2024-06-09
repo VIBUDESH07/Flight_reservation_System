@@ -8,9 +8,9 @@
 
     .image1 img {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
+        top: -5%;
+        left: -4%;
+        width: 110%;
         height: 100%;
         object-fit: cover;
         border-radius: 0% 0% 10% 10%;
