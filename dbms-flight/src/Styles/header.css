@@ -1,33 +1,35 @@
-/* Styles/header.css */
-/* Styles/header.css */
-.navbar {
-    position: fixed; /* Set the position to fixed */
-    top: 0; /* Position the navbar at the top of the viewport */
-    left: 0; /* Position the navbar at the left of the viewport */
-    width: 100%; /* Make the navbar take up the full width */
-    z-index: 1000; /* Ensure the navbar appears above other content */
+.sidebar {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1100; 
+    padding-left: 20px; 
+    padding-top: 30px; 
+  }
+  
+  /* Example styles for other elements to ensure they don't overlap */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
     display: flex;
     padding: 1rem 2rem;
     align-items: center;
     justify-content: space-between;
-    overflow: hidden;
     background-color: rgba(255, 251, 251, 0.7);
     box-shadow: 0px 1px 10px -5px black;
-}
-
-/* Rest of your existing styles */
-
-
-.logo-container {
+  }
+  
+  .logo-container {
     display: flex;
     align-items: center;
     text-decoration: none;
     color: inherit;
-    
-}
-
-
-.logo1 {
+  }
+  
+  .logo1 {
     margin: 0;
     padding: 0;
     font-size: 1.2rem; /* Adjust font size as needed */
@@ -40,107 +42,104 @@
     /* margin-left: 10  0px; */
 }
 
-.home-icon {
+  
+  .home-icon {
     background-color: green;
     color: white;
     border-radius: 50%;
     padding: 0.5rem;
     rotate: -39deg;
-}
-
-.search-container {
+  }
+  
+  .search-container {
     position: relative;
-    width: 40%; /* Adjusted width */
-}
-
-.search {
+    width: 40%;
+  }
+  
+  .search {
     width: 100%;
     height: 4vh;
-    padding-right: 2rem; /* Adjust the padding to leave space for the icon */
-}
-
-.search-icon {
+    padding-right: 2rem;
+  }
+  
+  .search-icon {
     position: absolute;
-    right: 0.5rem; /* Adjust based on your preference */
+    right: 0.5rem;
     top: 45%;
     transform: translateY(-50%);
     pointer-events: none;
-}
-.btn{
+  }
+  
+  .btn {
     margin-right: 10rem;
-}
-
-#login {
+  }
+  
+  #login {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     letter-spacing: 1px;
-    margin-right: 1rem; 
+    margin-right: 1rem;
     background-color: green;
-    color:aliceblue;
+    color: aliceblue;
     border-radius: 40px;
     height: 5vh;
-    width:150%;
-}
-
-#login:hover {
-    
-}
-
-/* Responsive styles */
-@media (max-width: 1024px) {
+    width: 150%;
+  }
+  
+  @media (max-width: 1024px) {
     .navbar {
-        padding: 1rem;
-        flex-direction: row;
+      padding: 1rem;
+      flex-direction: row;
     }
-
-    .home-icon,
-    #login {
-        margin: 0.5rem 0;
+  
+    .home-icon, #login {
+      margin: 0.5rem 0;
     }
-
+  
     .search-container {
-        width: 80%;
+      width: 80%;
     }
-}
-
-@media (max-width: 768px) {
+  }
+  
+  @media (max-width: 768px) {
     .navbar {
-        padding: 0.5rem;
+      padding: 0.5rem;
     }
-
+  
     .home-icon {
-        margin-left: 0.5rem;
+      margin-left: 0.5rem;
     }
-
+  
     .search-container {
-        width: 100%;
+      width: 100%;
     }
-
+  
     #login {
-        margin-right: 0.5rem;
+      margin-right: 0.5rem;
     }
-}
-
-@media (max-width: 480px) {
+  }
+  
+  @media (max-width: 480px) {
     .navbar {
-        padding: 0.5rem;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
+      padding: 0.5rem;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
     }
-
-    .home-icon,
-    #login {
-        margin: 0.5rem 0;
+  
+    .home-icon, #login {
+      margin: 0.5rem 0;
     }
-    .btn{
-        margin-right: 0.5rem;
+  
+    .btn {
+      margin-right: 0.5rem;
     }
-
+  
     .search-container {
-        width: 30%;
+      width: 30%;
     }
-
+  
     .search {
-        width: calc(100% - 2rem); /* Ensure input width doesn't exceed container */
+      width: calc(100% - 2rem);
     }
-}
+  }
+  
