@@ -9,6 +9,7 @@ import ErrorPage from "./Components/Error";
 import PassengerDetails from "./Components/PassengerDetails";
 import AdminPage from "./Components/AdminPage";
 import UpdateFlight from "./Components/UpdateFlight";
+import SignUp from "./Components/SignUp";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="add" element={<Addflight />} />
           <Route path="fetch" element={<Fetch />} />
           <Route path="passenger" element={<PassengerDetails />} />
+          <Route path="signup" element={<SignUp />} />
           <Route path="appointment/:id" element={<Appointment />} />
           <Route path="update-flight/:id" element={<UpdateFlight/>} />
           <Route path="admin" element={<AdminPage />} />
