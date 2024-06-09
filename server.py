@@ -9,9 +9,27 @@ import base64
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from flask_mail import Mail, Message
+import secrets
+import random
+from flask import redirect, url_for
+
+secret= secrets.token_hex(16)  # Generates a 32-character hexadecimal string (16 bytes)
+
+
 
 app = Flask(__name__)
 CORS(app)
+app.secret_key = secret
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'vibudeshrb.22cse@kongu.edu'
+app.config['MAIL_PASSWORD'] = 'andx xznk qhsn aagi' 
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+
+mail = Mail(app)
 
 GOOGLE_CLIENT_ID = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq.apps.googleusercontent.com'
 
@@ -35,7 +53,7 @@ def image_to_binary(image_path):
     with open(image_path, 'rb') as file:
         binary_data = file.read()
     return binary_data
-
+ 
 @app.route('/api/add-flight', methods=['POST'])
 def add_flight():
     flight_name = request.form['flightName']
@@ -299,6 +317,7 @@ def get_bookings_by_email():
         if connection.is_connected():
             cursor.close()
             connection.close()
+
 @app.route('/api/flight-detail-admin', methods=['GET'])
 def get_details():
     # Your existing code to fetch flight details from the database
@@ -325,7 +344,80 @@ def get_details():
         if connection.is_connected():
             cursor.close()
             connection.close()
-            
+
+
+def generate_otp():
+    # Generate a 6-digit random OTP
+    return ''.join(random.choices('0123456789', k=6))
+
+
+otp_storage = {}
+
+@app.route('/api/send-otp', methods=['POST'])
+def send_otp():
+    data = request.get_json()
+    email = data.get('email')
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    # Generate OTP
+    otp = generate_otp()
+
+    # Store OTP in otp_storage
+    otp_storage[email] = otp
+    print(otp_storage)
+    # Send OTP via email
+    try:
+        msg = Message('OTP for Verification', sender='vibudeshrb.22cse@kongu.edu', recipients=[email])  # Replace with your Gmail address
+        msg.body = f'Your OTP for verification is: {otp}'
+        mail.send(msg)
+        return jsonify({'success': True, 'message': 'OTP sent successfully'})
+    except Exception as e:
+        print(f"Failed to send OTP: {e}")
+        return jsonify({'error': 'Failed to send OTP'}), 500
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role')
+    otp = data.get('otp')
+
+    print(email,username,password,role)
+    verification_result = verify_otp(email, otp)
+    print(verification_result)
+    if not verification_result['success']:
+        return jsonify({"success": False, "message": verification_result['message']}), 400
+
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        # Insert new user
+        cursor.execute("INSERT INTO login (username, email, password, role) VALUES (%s, %s, %s, %s)", (username, email, password, role))
+        connection.commit()
+
+        return jsonify({"success": True, "message": "Signup successful"}), 200
+
+    except Error as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+def verify_otp(email, otp):
+    if not email or not otp:
+        return {'success': False, 'message': 'Email and OTP are required'}
+    print(email,otp,otp_storage)
+    # Check if the OTP matches
+    if email in otp_storage and otp_storage[email] == otp:
+       
+        return {'success': True, 'message': 'OTP verified successfully'}
+    else:
+        return {'success': False, 'message': 'Invalid OTP'}
 
 @app.route('/api/update-flt/<int:flight_id>', methods=['GET', 'PUT'])
 def update_flight(flight_id):
