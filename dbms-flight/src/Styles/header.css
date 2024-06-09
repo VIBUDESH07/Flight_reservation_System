@@ -65,9 +65,9 @@
   .search-icon {
     position: absolute;
     right: 0.5rem;
-    top: 45%;
+    top: 40%;
     transform: translateY(-50%);
-    pointer-events: none;
+    /* pointer-events: none; */
   }
   
   .btn {
