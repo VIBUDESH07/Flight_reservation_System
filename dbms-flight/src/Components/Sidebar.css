@@ -4,7 +4,7 @@
     left: 0;
     z-index: 1100;
     padding-left: 25px;
-    padding-top: 50px;
+    padding-top: 30px;
   }
   
   .profile-pic {
@@ -17,14 +17,13 @@
   .profile-section {
     text-align: center;
   }
-  
-  .search-container {
-    padding: 1rem;
+  .login
+  {
+    justify-content: center;
+    border-radius: 20px;
+    
   }
-  
-  .search-container .MuiInputBase-root {
-    width: 100%;
-  }
+
   
   @media (max-width: 768px) {
     .sidebar {
