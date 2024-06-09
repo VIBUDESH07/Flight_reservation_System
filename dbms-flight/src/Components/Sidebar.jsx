@@ -62,7 +62,7 @@ const Sidebar = () => {
   );
 
   return (
-    <div>
+    <div style={{marginTop:'10%'}}>
       {['left'].map((anchor) => (
         <React.Fragment key={anchor}>
           <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
