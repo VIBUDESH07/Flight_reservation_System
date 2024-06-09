@@ -42,11 +42,6 @@ const Header = () => {
   return (
 
     <div className='navbar'>
-      <Link to='/' className='logo-container'>
-        <h5 className='logo'>Let's</h5>
-        <FontAwesomeIcon icon={faPlane} className='home-icon' />
-        <h5 className='logo'>Travel</h5>
-      </Link>
 
       <Link to='/home' className='logo-container'>
         <h5 className='logo1'>Let's</h5>

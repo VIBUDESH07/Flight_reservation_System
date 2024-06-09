@@ -32,7 +32,7 @@ const HomePage = () => {
     <div className='cont'>
 
       <div className='image1'>
-      <Sidebar /> {/* Add Sidebar component here */}
+       {/* Add Sidebar component here */}
       <div className='image'>
         <h1>Travel for enough, you meet yourself...</h1>
         <img src={logoImage} alt='main' />
@@ -110,11 +110,7 @@ const HomePage = () => {
             <option value="3">Credit Card</option>
           </select>
         </div>
-        <div className='button-container'>
-          <button className='search-button' onClick={handleSearch}>
-            Search
-          </button>
-        </div>
+       
       </div>
     </div>
   );
