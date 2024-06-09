@@ -198,7 +198,12 @@
         flex-direction: column;
 
     }
-
+    .search-container .search
+    {
+        font-style: italic;
+        font-weight: bolder;
+        font-size: 15px;
+    }
     /* Homepage.css */
     .search-button {
         
@@ -208,7 +213,7 @@
         background-color:rgb(55,167,55);
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 20px;
         cursor: pointer;
         font-size: 16px;
         margin-top: -80px;
