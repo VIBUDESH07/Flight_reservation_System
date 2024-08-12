@@ -1,4 +1,4 @@
-# Flight_reservation_System
+# Flight Reservation System
 Welcome to the Flight Reservation System! 
 This application allows passengers to book flights, select scheduled times, and download their tickets.
 It is built using React.js for the frontend and Python for the backend.
