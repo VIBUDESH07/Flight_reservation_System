@@ -36,10 +36,10 @@ GOOGLE_CLIENT_ID = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq.apps.googleuse
 def connect_to_database():
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            database='dbms_flight',
-            user='root',
-            password='1234'
+            host='sql12.freesqldatabase.com',
+            database='sql12735156',
+            user='sql12735156',
+            password='sps7Pyy9z8'
         )
         if connection.is_connected():
             return connection
