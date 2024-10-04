@@ -36,10 +36,10 @@ GOOGLE_CLIENT_ID = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq.apps.googleuse
 def connect_to_database():
     try:
         connection = mysql.connector.connect(
-            host='sql12.freesqldatabase.com',
-            database='sql12735156',
-            user='sql12735156',
-            password='sps7Pyy9z8'
+            host='localhost',
+            database='dbms_flight',
+            user='root',
+            password='1234'
         )
         if connection.is_connected():
             return connection
@@ -151,11 +151,12 @@ def get_flight_data():
     data = request.json
     from_value = data.get('from')
     to_value = data.get('to')
-
+    print(from_value)
+    print(to_value)
     try:
         connection = connect_to_database()
         cursor = connection.cursor(dictionary=True)
-
+        
         query = """
         SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
                CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
