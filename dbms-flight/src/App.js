@@ -12,6 +12,7 @@ import UpdateFlight from "./Components/UpdateFlight";
 import SignUp from "./Components/SignUp";
 import Sidebar from "./Components/Sidebar"; // Correct import path
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
+import Greeting from "./Components/Add";
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
           <Route path="update-flight/:id" element={<ProtectedRoute element={UpdateFlight} requiredRole="admin" />} />
           <Route path="admin" element={<ProtectedRoute element={AdminPage} requiredRole="admin" />} />
           <Route path="home" element={<Sidebar />} />
-          <Route path="*" element={<ErrorPage />} />
+          <Route path="*" element={ <Greeting/>} />
+         
         </Route>
       </Routes>
     </div>
