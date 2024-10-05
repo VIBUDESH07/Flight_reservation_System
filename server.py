@@ -145,38 +145,45 @@ def google_login():
     except Exception as e:
         print(e)
         return jsonify({"success": False}), 500
-
 @app.route('/api/flight-data', methods=['POST'])
 def get_flight_data():
     data = request.json
     from_value = data.get('from')
     to_value = data.get('to')
-    print(from_value)
-    print(to_value)
+    
     try:
         connection = connect_to_database()
         cursor = connection.cursor(dictionary=True)
         
-        query = """
-        SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
-               CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
-        FROM flight
-        WHERE destination = %s AND arrival = %s
-        """
-        cursor.execute(query, (from_value, to_value))
+        if from_value and to_value:
+            # If both from_value and to_value are provided
+            query = """
+                SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
+                CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
+                FROM flight
+                WHERE destination = %s AND arrival = %s
+            """
+            cursor.execute(query, (from_value, to_value))
+        else:
+            # If from_value or to_value is not provided, fetch all flights without filtering
+            query = """
+                SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
+                CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
+                FROM flight
+            """
+            cursor.execute(query)
+        
         flight_data = cursor.fetchall()
-
         return jsonify(flight_data)
 
     except Error as e:
-        print(f"Error: {e}")
+        print(f"Error while fetching flight data: {e}")
         return jsonify({"error": str(e)}), 500
 
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
-
 def send_email(to_email, subject, message):
     from_email = 'vibudeshrb.22cse@kongu.edu'
     password = 'andx xznk qhsn aagi'
@@ -236,14 +243,34 @@ def book_flight():
     date = request.form['date']
     gender = request.form['gender']
     no_of_people = int(request.form['no_of_people'])
-    people_genders = request.form['people_genders']
-    proof = request.files['proof']
+    
+    
+    # Initialize a list to hold passenger details
+    passengers_details = []
 
-    if not os.path.exists('uploads'):
-        os.makedirs('uploads')
+    # Collect details for each passenger
+    for i in range(no_of_people):
+        passenger_name = request.form[f'people[{i}][name]']
+        passenger_gender = request.form[f'people[{i}][gender]']
+        passenger_age = request.form[f'people[{i}][age]']
+        
+        # Collect proof file for each passenger
+        proof_file = request.files.get(f'people[{i}][proof]')
+        if proof_file:
+            if not os.path.exists('uploads'):
+                os.makedirs('uploads')
 
-    proof_path = os.path.join('uploads', proof.filename)
-    proof.save(proof_path)
+            proof_path = os.path.join('uploads', proof_file.filename)
+            proof_file.save(proof_path)
+        else:
+            proof_path = None  # Handle case where proof might not be uploaded
+        
+        passengers_details.append({
+            'name': passenger_name,
+            'gender': passenger_gender,
+            'age': passenger_age,
+            'proof': proof_path
+        })
 
     try:
         connection = connect_to_database()
@@ -260,33 +287,48 @@ def book_flight():
             return jsonify({"error": "Not enough seats available"}), 400
 
         # Fetch flight name and price
-        cursor.execute("SELECT flight_name, price, email FROM flight WHERE id = %s", (flight_id,))
+        cursor.execute("SELECT flight_name, price FROM flight WHERE id = %s", (flight_id,))
         flight_info = cursor.fetchone()
         if not flight_info:
             return jsonify({"error": "Flight not found"}), 404
 
         flight_name = flight_info[0]
         price_per_person = flight_info[1]
-        from1 = flight_info[2]
+        
         # Calculate total price
-        total_price = int(price_per_person) * int(no_of_people)
+        total_price = price_per_person * no_of_people
 
         # Update the number of seats
         cursor.execute("UPDATE flight SET no_of_seats = no_of_seats - %s WHERE id = %s", (no_of_people, flight_id))
         
-        # Insert passenger details
-        cursor.execute(
-            "INSERT INTO passengers (flight_id, name, email, phone, date, gender, no_of_people, people_genders, proof, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (flight_id, name, email, phone, date, gender, no_of_people, people_genders, proof_path, total_price)
-        )
+        # Insert passenger details into the database
+        for passenger in passengers_details:
+            cursor.execute(
+                "INSERT INTO passengers (flight_id, name, email, phone, date, gender, proof, price,no_of_people) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)",
+                (flight_id, passenger['name'], email, phone, date, passenger['gender'], passenger['proof'], price_per_person,1)
+            )
 
         connection.commit()
         cursor.close()
         connection.close()
 
-        # Send email confirmation
+        # Prepare email confirmation message
         subject = "Flight Booking Confirmation"
-        message = f"Dear {name},\n\nYour flight booking is confirmed.\n\nDetails:\nFlight Name: {flight_name}\nTotal Price: {total_price}\nDate: {date}\nNumber of People: {no_of_people}\nGender: {gender}\nEmail: {email}\nPhone: {phone}\n\nThank you for booking with us."
+        message = f"Dear {name},\n\nYour flight booking is confirmed.\n\nDetails:\nFlight Name: {flight_name}\nTotal Price: {total_price}\nDate: {date}\nNumber of People: {no_of_people}\n\nPassenger Details:\n"
+        
+        for i, passenger in enumerate(passengers_details, start=1):
+            message += f"Passenger {i}:\n"
+            message += f"  Name: {passenger['name']}\n"
+            message += f"  Gender: {passenger['gender']}\n"
+            message += f"  Age: {passenger['age']}\n"
+            if passenger['proof']:
+                message += f"  Proof: {passenger['proof']}\n"
+            else:
+                message += f"  Proof: Not uploaded\n"
+        
+        message += "\nThank you for booking with us."
+
+        # Send email confirmation
         send_email(email, subject, message)
 
         return jsonify({"message": "Flight booked successfully"}), 200
