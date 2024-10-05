@@ -13,6 +13,7 @@ import SignUp from "./Components/SignUp";
 import Sidebar from "./Components/Sidebar"; // Correct import path
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 import Greeting from "./Components/Add";
+import Payment from "./Components/Payment";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="passenger" element={<PassengerDetails />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="appointment/:id" element={<Appointment />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="update-flight/:id" element={<ProtectedRoute element={UpdateFlight} requiredRole="admin" />} />
           <Route path="admin" element={<ProtectedRoute element={AdminPage} requiredRole="admin" />} />
           <Route path="home" element={<Sidebar />} />
