@@ -35,10 +35,10 @@ const Fetch = () => {
     fetchData();
   }, []);
 
-  const handleAppointment = (flightId) => {
+  const handleAppointment = (flightId,date) => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     if (isLoggedIn === 'true') {
-      navigate(`/appointment/${flightId}`);
+      navigate(`/appointment/${flightId}/${date}`);
     } else {
       navigate('/login');
     }
@@ -70,7 +70,7 @@ const Fetch = () => {
             <p className="date">{flight.no_of_seats} Seats Available</p>
             <button
               className="btn-container"
-              onClick={() => handleAppointment(flight.id)}  // Ensure `flight.id` is available
+              onClick={() => handleAppointment(flight.id,flight.date_time)}  // Ensure `flight.id` is available
             >
               Book a Flight
             </button>

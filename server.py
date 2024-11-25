@@ -13,6 +13,8 @@ from flask_mail import Mail, Message
 import secrets
 import random
 from flask import redirect, url_for
+from datetime import datetime
+
 
 secret= secrets.token_hex(16)  # Generates a 32-character hexadecimal string (16 bytes)
 
@@ -155,23 +157,27 @@ def get_flight_data():
         connection = connect_to_database()
         cursor = connection.cursor(dictionary=True)
         
+        # Get the current date and time
+        current_time = datetime.now()
+
         if from_value and to_value:
             # If both from_value and to_value are provided
             query = """
                 SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
                 CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
                 FROM flight
-                WHERE destination = %s AND arrival = %s
+                WHERE destination = %s AND arrival = %s AND date_time >= %s
             """
-            cursor.execute(query, (from_value, to_value))
+            cursor.execute(query, (from_value, to_value, current_time))
         else:
-            # If from_value or to_value is not provided, fetch all flights without filtering
+            # If from_value or to_value is not provided, fetch all future flights without filtering
             query = """
                 SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
                 CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
                 FROM flight
+                WHERE date_time >= %s
             """
-            cursor.execute(query)
+            cursor.execute(query, (current_time,))
         
         flight_data = cursor.fetchall()
         return jsonify(flight_data)
@@ -242,6 +248,7 @@ def book_flight():
     phone = request.form['phone']
     date = request.form['date']
     gender = request.form['gender']
+   
     no_of_people = int(request.form['no_of_people'])
     
     
@@ -356,6 +363,103 @@ def get_bookings_by_email():
         return jsonify(bookings)
     except Error as e:
         return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+@app.route('/api/flight-Details/<int:flight_id>', methods=['GET'])
+def get_flight(flight_id):
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor(dictionary=True)
+
+        # Fetch flight details by flight ID
+        cursor.execute("""
+            SELECT id, flight_name, destination, arrival, price, no_of_seats, 
+                   CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
+            FROM flight
+            WHERE id = %s
+        """, (flight_id,))
+
+        flight_details = cursor.fetchone()
+
+        if not flight_details:
+            return jsonify({"error": "Flight not found"}), 404
+        
+        return jsonify({'data':flight_details})
+
+    except Error as e:
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+from datetime import datetime
+
+@app.route('/api/check-availability', methods=['POST'])
+def check_availability():
+    data = request.json
+    print(data)
+    no_of_people = data.get('noOfPeople')
+    return_date = data.get('returnDate')
+    from_location = data.get('from')
+    to_location = data.get('to')
+    
+    if not no_of_people or not return_date or not from_location or not to_location:
+        return jsonify({'error': 'Flight ID, number of people, return date, from location, and to location are required'}), 400
+
+    try:
+        # Ensure the returnDate is in the correct format (YYYY-MM-DD)
+        connection = connect_to_database()
+        cursor = connection.cursor()
+
+        # Query to find the matching flight based on from, to, and returnDate
+        cursor.execute("""
+SELECT id, flight_name, arrival, Date_time, price, no_of_seats
+FROM flight 
+WHERE 
+  arrival = %s 
+  AND destination = %s;
+        """, ( from_location, to_location))
+        
+        result = cursor.fetchone()
+
+        if not result:
+            return jsonify({
+                "success": True,
+                "message": "No matching flight found",
+                "availableSeats": 0,  # Indicate no seats available
+                "flightDetails": {}
+            })
+
+        flight_id_db, flight_name, arrival, return_date_db, price, no_of_seats = result
+
+        # Check available seats
+        if no_of_seats >= no_of_people:
+            return jsonify({
+                "success": True,
+                "availableSeats": no_of_seats,
+                "flightDetails": {
+                    "id": flight_id_db,
+                    "flight_name": flight_name,
+                    "destination": to_location,
+                    "arrival": arrival,
+                    "price": price,
+                    "returnDate":return_date_db,
+                    "no_of_seats": no_of_seats,
+                }
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "message": "Not enough seats available",
+                "availableSeats": no_of_seats
+            }), 400
+
+    except Error as e:
+        return jsonify({'error': str(e)}), 500
+
     finally:
         if connection.is_connected():
             cursor.close()

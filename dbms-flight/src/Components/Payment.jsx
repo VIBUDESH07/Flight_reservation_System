@@ -4,48 +4,81 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const appointmentData = location.state; // Retrieve the appointment data passed from the Appointment page
+  const appointmentData = location.state;
   const [paymentStatus, setPaymentStatus] = useState('');
 
   const handlePayment = async () => {
-    // Simulate payment processing
-    const paymentSuccessful = true; // Simulate success for now
-
+    const paymentSuccessful = true; // Simulated payment status
+    console.log(appointmentData);
+  
     if (paymentSuccessful) {
       try {
-        // Prepare form data for flight booking
-        const formData = new FormData();
-        formData.append('flight_id', appointmentData.flight_id);
-        formData.append('name', appointmentData.name);
-        formData.append('email', appointmentData.email);
-        formData.append('phone', appointmentData.phone);
-        formData.append('date', appointmentData.date);
-        formData.append('gender', appointmentData.gender);
-        formData.append('no_of_people', appointmentData.noOfPeople);
-
+        // Create and populate FormData for the outbound flight
+        const outboundFormData = new FormData();
+        outboundFormData.append('name', appointmentData.name);
+        outboundFormData.append('email', appointmentData.email);
+        outboundFormData.append('phone', appointmentData.phone);
+        outboundFormData.append('date', appointmentData.formattedDate);
+        outboundFormData.append('gender', appointmentData.gender);
+        outboundFormData.append('no_of_people', appointmentData.noOfPeople);
+        outboundFormData.append('flight_id', appointmentData.flight_id);
+  
         // Append people details
         appointmentData.peopleDetails.forEach((person, index) => {
-          formData.append(`people[${index}][name]`, person.name);
-          formData.append(`people[${index}][gender]`, person.gender);
-          formData.append(`people[${index}][age]`, person.age);
-          // Append the proof for each person
+          outboundFormData.append(`people[${index}][name]`, person.name);
+          outboundFormData.append(`people[${index}][gender]`, person.gender);
+          outboundFormData.append(`people[${index}][age]`, person.age);
           if (appointmentData.proofs[index]) {
-            formData.append(`people[${index}][proof]`, appointmentData.proofs[index]);
+            outboundFormData.append(`people[${index}][proof]`, appointmentData.proofs[index]);
           }
         });
-
-        // Send the data to the server
-        const response = await fetch('http://localhost:5000/api/book-flight', {
+      
+        // Outbound flight booking
+        const outboundResponse = await fetch('http://localhost:5000/api/book-flight', {
           method: 'POST',
-          body: formData
+          body: outboundFormData,
         });
-
-        if (response.ok) {
-          setPaymentStatus('Payment successful and flight booked!');
-          navigate('/confirmation'); // Redirect to confirmation page
+  
+        if (outboundResponse.ok) {
+          // Handle return flight booking only if f_id is present
+          if (appointmentData.f_id) {
+            const returnFormData = new FormData();
+            returnFormData.append('name', appointmentData.name);
+            returnFormData.append('email', appointmentData.email);
+            returnFormData.append('phone', appointmentData.phone);
+            returnFormData.append('date', appointmentData.formattedDate);
+            returnFormData.append('gender', appointmentData.gender);
+            returnFormData.append('no_of_people', appointmentData.noOfPeople);
+            returnFormData.append('flight_id', appointmentData.f_id);
+  
+            appointmentData.peopleDetails.forEach((person, index) => {
+              returnFormData.append(`people[${index}][name]`, person.name);
+              returnFormData.append(`people[${index}][gender]`, person.gender);
+              returnFormData.append(`people[${index}][age]`, person.age);
+              if (appointmentData.proofs[index]) {
+                returnFormData.append(`people[${index}][proof]`, appointmentData.proofs[index]);
+              }
+            });
+  
+            const returnResponse = await fetch('http://localhost:5000/api/book-flight', {
+              method: 'POST',
+              body: returnFormData,
+            });
+  
+            if (returnResponse.ok) {
+              setPaymentStatus('Payment successful and round-trip flights booked!');
+              navigate('/confirmation'); // Redirect to confirmation page
+            } else {
+              const errorData = await returnResponse.json();
+              setPaymentStatus(`Return trip error: ${errorData.error}`);
+            }
+          } else {
+            setPaymentStatus('Payment successful and outbound flight booked!');
+            navigate('/confirmation'); // Redirect for one-way booking
+          }
         } else {
-          const errorData = await response.json();
-          setPaymentStatus(`Error: ${errorData.error}`);
+          const errorData = await outboundResponse.json();
+          setPaymentStatus(`Outbound trip error: ${errorData.error}`);
         }
       } catch (error) {
         setPaymentStatus(`Error: ${error.message}`);
@@ -54,23 +87,20 @@ const Payment = () => {
       setPaymentStatus('Payment failed. Please try again.');
     }
   };
-
+  
+  
   return (
     <div>
       <h2>Payment Page</h2>
-
-      {/* Show passenger details */}
       <h3>Passenger Details</h3>
+      <div>
+        <div>Name : {appointmentData.name}</div>
+        <div>Email : {appointmentData.email}</div>
+        <div>Phone : {appointmentData.phone}</div>
+        <div>Gender : {appointmentData.gender}</div>
+        <div>Price : {appointmentData.price}</div>
+      </div>
       <ul>
-        <div>
-            <div>{appointmentData.name}</div>
-            <div>{appointmentData.email}</div>
-            <div>{appointmentData.phone}</div>
-            <div>{appointmentData.age}</div>
-            <div>{appointmentData.gender}</div>
-            <div></div>
-            <div></div>
-        </div>
         {appointmentData.peopleDetails.map((person, index) => (
           <li key={index}>
             <strong>Passenger {index + 1}:</strong>
@@ -81,7 +111,6 @@ const Payment = () => {
           </li>
         ))}
       </ul>
-
       <button onClick={handlePayment}>Complete Payment</button>
       <p>{paymentStatus}</p>
     </div>
