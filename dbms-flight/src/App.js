@@ -26,7 +26,7 @@ function App() {
           <Route path="fetch" element={<Fetch />} />
           <Route path="passenger" element={<PassengerDetails />} />
           <Route path="signup" element={<SignUp />} />
-          <Route path="appointment/:id" element={<Appointment />} />
+          <Route path="appointment/:id/:date" element={<Appointment />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="update-flight/:id" element={<ProtectedRoute element={UpdateFlight} requiredRole="admin" />} />
           <Route path="admin" element={<ProtectedRoute element={AdminPage} requiredRole="admin" />} />
