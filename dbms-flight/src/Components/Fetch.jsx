@@ -56,12 +56,9 @@ const Fetch = () => {
   return (
   
     <div className="flight-container">
-      <h2>Flight Data</h2>
+      <h2>Flights</h2>
       {data.map((flight, index) => (
         <div key={index} className="flight-card">
-          <div className="flight-image">
-            <img src={`data:image/jpeg;base64,${flight.flight_img_base64}`} alt="Flight" />
-          </div>
           <div className="flight-details">
             <p className="head">{flight.flight_name}</p>
             <p className="dest">{flight.destination} to {flight.arrival}</p>

@@ -14,6 +14,7 @@ import Sidebar from "./Components/Sidebar"; // Correct import path
 import ProtectedRoute from "./Components/ProtectedRoute"; // Import the ProtectedRoute component
 import Greeting from "./Components/Add";
 import Payment from "./Components/Payment";
+import Ticket from "./Components/Ticket";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="add" element={<ProtectedRoute element={Addflight} requiredRole="admin" />} />
           <Route path="fetch" element={<Fetch />} />
+          <Route path="ticket" element={<Ticket />} />
           <Route path="passenger" element={<PassengerDetails />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="appointment/:id/:date" element={<Appointment />} />

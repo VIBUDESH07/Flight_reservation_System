@@ -63,6 +63,14 @@ const Sidebar = ({ open, toggleSidebar, role = "User" }) => {
               <ListItemText primary="Flight Details" className="list-item-text" />
             </ListItemButton>
           </ListItem>
+          <ListItem disablePadding className="list-item">
+            <ListItemButton component={Link} to="/ticket"> {/* Navigate to Flight Details page */}
+              <ListItemIcon className="list-item-icon">
+                <FlightIcon />
+              </ListItemIcon>
+              <ListItemText primary="Ticket" className="list-item-text" />
+            </ListItemButton>
+          </ListItem>
           <Divider className="divider" />
           <ListItem disablePadding className="list-item">
             <ListItemButton component={Link} to="/admin"> {/* Navigate to Admin page */}

@@ -13,16 +13,15 @@ const Appointment = () => {
   const [gender, setGender] = useState('');
   const [noOfPeople, setNoOfPeople] = useState('');
   const [flightType, setFlightType] = useState('one-way');
-  const [is_available,setIs_Available] = useState(false);
+  const [is_available, setIs_Available] = useState(false);
   const [peopleDetails, setPeopleDetails] = useState([]);
   const [proofs, setProofs] = useState([]);
-  const [flightDetails, setFlightDetails] = useState(null); // Store flight details
+  const [flightDetails, setFlightDetails] = useState(null);
   const [availabilityMessage, setAvailabilityMessage] = useState('');
-  const[price,setPrice]=useState('');
-  const[f_id,setF_Id]=useState(0);
+  const [price, setPrice] = useState('');
+  const [f_id, setF_Id] = useState(0);
   const formattedDate = date1 ? new Date(date1).toISOString().split('T')[0] : '';
- 
-  // Handle dynamic people details change
+
   const handlePersonChange = (index, field, value) => {
     const newPeopleDetails = [...peopleDetails];
     newPeopleDetails[index] = { ...newPeopleDetails[index], [field]: value };
@@ -37,8 +36,27 @@ const Appointment = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    // Prepare appointment data
+
+    if (flightType === 'round-trip' && is_available) {
+      const suggestedReturnDate = availabilityMessage?.returnDate;
+
+      if (suggestedReturnDate) {
+        // Format both dates (user's return date and suggested date) to the same format (YYYY-MM-DD)
+        const suggestedDate = new Date(suggestedReturnDate).toISOString().split('T')[0];
+
+        // Convert the user entered returnDate from DD-MM-YYYY to YYYY-MM-DD
+        const [day, month, year] = returnDate.split('-');
+        const userFormattedDate = `${day}-${month}-${year}`;
+        console.log(suggestedDate,userFormattedDate)
+        if (suggestedDate !== userFormattedDate) {
+          alert(
+            `Your selected return date does not match the suggested date: ${suggestedDate}. Please adjust your selection.`
+          );
+          return;
+        }
+      }
+    }
+
     const appointmentData = {
       flight_id,
       name,
@@ -52,16 +70,16 @@ const Appointment = () => {
       price,
       proofs,
     };
-  
-    // Add f_id for round-trip flights
-    if ( is_available) {
+
+    if (is_available) {
       appointmentData.f_id = f_id;
     }
-    console.log(appointmentData)
-    // Navigate to the payment page with all necessary data
+
+    console.log(appointmentData);
+
     navigate('/payment', { state: appointmentData });
   };
-  
+
   const renderPeopleInputs = () => {
     const inputs = [];
     for (let i = 0; i < noOfPeople; i++) {
@@ -113,18 +131,14 @@ const Appointment = () => {
     return inputs;
   };
 
-  // Fetch flight details
   const fetchFlightDetails = async (flight_id) => {
     try {
       const response = await fetch(`http://localhost:5000/api/flight-Details/${flight_id}`);
       const data = await response.json();
-      
-      console.log(data); // Log the entire response to verify
-      console.log(data.data); // Log flightDetails specifically
-  
+
       if (data.data) {
-        setFlightDetails(data.data); 
-        setPrice(data.data.price) // Now using the correct key from the backend
+        setFlightDetails(data.data);
+        setPrice(data.data.price);
       } else {
         setFlightDetails(null);
       }
@@ -134,31 +148,28 @@ const Appointment = () => {
     }
   };
 
-  // Check return date availability
   const checkReturnDateAvailability = async (noOfPeople, returnDate) => {
-    console.log(noOfPeople, returnDate);
     try {
       const response = await fetch('http://localhost:5000/api/check-availability', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           from: flightDetails?.destination,
           to: flightDetails?.arrival,
-          noOfPeople: noOfPeople,
-
-          returnDate: returnDate
-        })
+          noOfPeople,
+          returnDate,
+        }),
       });
 
       const data = await response.json();
-      console.log(data)
+
       if (response.ok) {
         setAvailabilityMessage(data.flightDetails);
-        setIs_Available(true)
-        
-        setPrice(flightDetails.price+data.flightDetails.price);
+        setIs_Available(true);
+        setPrice(flightDetails.price + data.flightDetails.price);
+        setF_Id(data.flightDetails.id);
       } else {
         console.error(data.error || 'Error checking availability');
         setAvailabilityMessage('Error checking return date availability');
@@ -167,21 +178,17 @@ const Appointment = () => {
       console.error('Request failed:', error);
       setAvailabilityMessage('Error checking return date availability');
     }
-    if(is_available){
-      console.log(availabilityMessage.id)
-      setF_Id(availabilityMessage.id)
-    }
   };
 
   useEffect(() => {
     if (flight_id) {
-      fetchFlightDetails(flight_id); // Fetch flight details on component mount
+      fetchFlightDetails(flight_id);
     }
   }, [flight_id]);
 
   useEffect(() => {
     if (flightType === 'round-trip' && returnDate) {
-      checkReturnDateAvailability(noOfPeople, returnDate); // Check return date availability when returnDate or noOfPeople changes
+      checkReturnDateAvailability(noOfPeople, returnDate);
     }
   }, [returnDate, flightType, noOfPeople, flight_id]);
 
@@ -212,7 +219,6 @@ const Appointment = () => {
             <label>Phone:</label>
             <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
           </div>
-
           {flightType === 'round-trip' && (
             <div>
               <label>Return Date:</label>
@@ -220,14 +226,16 @@ const Appointment = () => {
                 type="date"
                 value={returnDate}
                 onChange={(e) => setReturnDate(e.target.value)}
-                min={formattedDate} // Ensure return date is after departure date
+                min={formattedDate}
                 required={flightType === 'round-trip'}
               />
+              {returnDate && returnDate !== availabilityMessage.returnDate && (
+                <p className="error">
+                  Please select the suggested return date: {availabilityMessage.returnDate}.
+                </p>
+              )}
             </div>
           )}
-          <p>
-            {availabilityMessage.returnDate}
-          </p>
           <div>
             <label>Gender:</label>
             <select value={gender} onChange={(e) => setGender(e.target.value)} required>
@@ -240,8 +248,8 @@ const Appointment = () => {
           <div>
             <label>Flight Type:</label>
             <select value={flightType} onChange={(e) => setFlightType(e.target.value)} required>
-              <option value="one-way">One Way</option>
-              <option value="round-trip">Round Trip</option>
+              <option value="one-way">One-way</option>
+              <option value="round-trip">Round-trip</option>
             </select>
           </div>
           <div>
@@ -249,17 +257,13 @@ const Appointment = () => {
             <input
               type="number"
               value={noOfPeople}
-              onChange={(e) => {
-                const number = Math.max(1, Number(e.target.value)); // Ensure at least one person
-                setNoOfPeople(number);
-                setPeopleDetails(new Array(number).fill({})); // Reset people details
-                setProofs(new Array(number).fill(null)); // Reset proofs
-              }}
+              onChange={(e) => setNoOfPeople(e.target.value)}
+              min="1"
               required
             />
           </div>
-          {noOfPeople > 0 && renderPeopleInputs()}
-          <button type="submit">Proceed to Payment</button>
+          {renderPeopleInputs()}
+          <button type="submit">Submit</button>
         </form>
       </div>
     </div>

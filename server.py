@@ -64,23 +64,17 @@ def add_flight():
     date_time = request.form['dateTime']
     no_of_seats = request.form['noOfSeats']
     email = request.form['email']
-    flight_img = request.files['flightImg']
+
     price= request.form['price']
 
-    if not os.path.exists('uploads'):
-        os.makedirs('uploads')
-
-    img_path = os.path.join('uploads', flight_img.filename)
-    flight_img.save(img_path)
-
-    binary_img = image_to_binary(img_path)
+ 
 
     connection = connect_to_database()
     if connection:
         cursor = connection.cursor()
-        sql_insert_query = """INSERT INTO flight (flight_name, destination, arrival, flight_img, date_time, no_of_seats, email,price)
+        sql_insert_query = """INSERT INTO flight (flight_name, destination, arrival,  date_time, no_of_seats, email,price,flight_num)
                               VALUES (%s, %s, %s, %s, %s, %s, %s,%s)"""
-        record_tuple = (flight_name, destination, arrival, binary_img, date_time, no_of_seats, email,price)
+        record_tuple = (flight_name, destination, arrival,  date_time, no_of_seats, email,price,"FU9")
         cursor.execute(sql_insert_query, record_tuple)
         connection.commit()
         connection.close()
@@ -147,30 +141,103 @@ def google_login():
     except Exception as e:
         print(e)
         return jsonify({"success": False}), 500
+def get_booking_details(booking_id):
+    try:
+        # Connect to MySQL Database
+        connection = connect_to_database()
+        if connection is None:
+            return None
+
+        cursor = connection.cursor(dictionary=True)
+
+        # Query to fetch booking details by booking_id
+        query = "SELECT * FROM passengers WHERE id = %s"
+        cursor.execute(query, (booking_id,))
+        booking = cursor.fetchone()
+
+        if not booking:
+            cursor.close()
+            connection.close()
+            return None
+
+        # Extract flight_id from booking details
+        flight_id = booking['flight_id']
+
+        # Query to fetch flight details using flight_id
+        flight_query = "SELECT * FROM flight WHERE id = %s"
+        cursor.execute(flight_query, (flight_id,))
+        flight = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        if flight:
+            # Merge booking and flight details
+            booking_details = {
+                'booking_id': booking['id'],
+                'name': booking['name'],
+                'flight_id': flight['id'],
+                'flight_name': flight['flight_name'],
+                'destination': flight['destination'],
+                'arrival': flight['arrival'],
+                'date': booking['date'],
+                'price':booking['price'],
+                'no_of_people':booking['no_of_people']
+            }
+            return booking_details
+        else:
+            return None
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+
+# API endpoint to fetch booking details
+@app.route('/api/booking/<int:booking_id>', methods=['GET'])
+def get_booking(booking_id):
+    booking_details = get_booking_details(booking_id)
+    
+    if booking_details:
+        return jsonify({
+            'success': True,
+            'booking': booking_details
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'message': 'No booking found for this ID'
+        })
+
 @app.route('/api/flight-data', methods=['POST'])
 def get_flight_data():
     data = request.json
     from_value = data.get('from')
     to_value = data.get('to')
+
+    # Validate 'from' and 'to' values
+    if not from_value or not to_value:
+        return jsonify({"error": "'from' and 'to' values are required"}), 400
     
+    # Convert from_value and to_value to lowercase for case-insensitive comparison
+    from_value = from_value.lower()
+    to_value = to_value.lower()
+
     try:
         connection = connect_to_database()
         cursor = connection.cursor(dictionary=True)
-        
+
         # Get the current date and time
         current_time = datetime.now()
 
         if from_value and to_value:
-            # If both from_value and to_value are provided
             query = """
                 SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
                 CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
                 FROM flight
-                WHERE destination = %s AND arrival = %s AND date_time >= %s
+                WHERE LOWER(destination) LIKE %s AND LOWER(arrival) LIKE %s AND date_time >= %s
             """
-            cursor.execute(query, (from_value, to_value, current_time))
+            cursor.execute(query, (f"%{from_value}%", f"%{to_value}%", current_time))
         else:
-            # If from_value or to_value is not provided, fetch all future flights without filtering
             query = """
                 SELECT id, flight_name, price, no_of_seats, destination, arrival, date_time, 
                 CAST(TO_BASE64(flight_img) AS CHAR) AS flight_img_base64
@@ -178,7 +245,7 @@ def get_flight_data():
                 WHERE date_time >= %s
             """
             cursor.execute(query, (current_time,))
-        
+
         flight_data = cursor.fetchall()
         return jsonify(flight_data)
 
@@ -407,55 +474,60 @@ def check_availability():
     to_location = data.get('to')
     
     if not no_of_people or not return_date or not from_location or not to_location:
-        return jsonify({'error': 'Flight ID, number of people, return date, from location, and to location are required'}), 400
+        return jsonify({'error': 'Number of people, return date, from location, and to location are required'}), 400
 
     try:
         # Ensure the returnDate is in the correct format (YYYY-MM-DD)
         connection = connect_to_database()
         cursor = connection.cursor()
 
-        # Query to find the matching flight based on from, to, and returnDate
+        # Query to find the nearest matching flight based on from, to, and returnDate
         cursor.execute("""
-SELECT id, flight_name, arrival, Date_time, price, no_of_seats
-FROM flight 
+SELECT id, flight_name, arrival, Date_time, price, no_of_seats,
+       ABS(DATEDIFF(Date_time, %s)) AS date_diff
+FROM flight
 WHERE 
   arrival = %s 
-  AND destination = %s;
-        """, ( from_location, to_location))
+  AND destination = %s
+ORDER BY date_diff ASC, Date_time ASC
+LIMIT 1;
+        """, (return_date, from_location, to_location))
         
         result = cursor.fetchone()
 
-        if not result:
+        # Always return one result, even if it means no exact match
+        if result:
+            flight_id_db, flight_name, arrival, return_date_db, price, no_of_seats, _ = result
+
+            # Check available seats
+            if no_of_seats >= int(no_of_people):
+                return jsonify({
+                    "success": True,
+                    "availableSeats": no_of_seats,
+                    "flightDetails": {
+                        "id": flight_id_db,
+                        "flight_name": flight_name,
+                        "destination": to_location,
+                        "arrival": arrival,
+                        "price": price,
+                        "returnDate": return_date_db,
+                        "no_of_seats": no_of_seats,
+                    }
+                })
+            else:
+                return jsonify({
+                    "success": False,
+                    "message": "Not enough seats available",
+                    "availableSeats": no_of_seats
+                }), 400
+        else:
+            # Return a placeholder flight if no results exist
             return jsonify({
                 "success": True,
-                "message": "No matching flight found",
-                "availableSeats": 0,  # Indicate no seats available
+                "message": "No matching flights found",
+                "availableSeats": 0,
                 "flightDetails": {}
             })
-
-        flight_id_db, flight_name, arrival, return_date_db, price, no_of_seats = result
-
-        # Check available seats
-        if no_of_seats >= no_of_people:
-            return jsonify({
-                "success": True,
-                "availableSeats": no_of_seats,
-                "flightDetails": {
-                    "id": flight_id_db,
-                    "flight_name": flight_name,
-                    "destination": to_location,
-                    "arrival": arrival,
-                    "price": price,
-                    "returnDate":return_date_db,
-                    "no_of_seats": no_of_seats,
-                }
-            })
-        else:
-            return jsonify({
-                "success": False,
-                "message": "Not enough seats available",
-                "availableSeats": no_of_seats
-            }), 400
 
     except Error as e:
         return jsonify({'error': str(e)}), 500

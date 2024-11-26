@@ -1,0 +1,90 @@
+/* Payment.css */
+
+.payment-body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+  }
+  
+  .payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f3f4f6;
+  }
+  
+  .payment-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .payment-header {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .details-section {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f9fafb;
+  }
+  
+  .details-title {
+    font-size: 18px;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    color: #555;
+  }
+  
+  .details-grid span {
+    font-weight: bold;
+  }
+  
+  .passenger-card {
+    padding: 15px;
+    background: #f1f9ff;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  
+  .qr-code {
+    margin: 20px 0;
+  }
+  
+  .payment-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .payment-btn:hover {
+    background-color: #218838;
+  }
+  
+  .payment-status {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
