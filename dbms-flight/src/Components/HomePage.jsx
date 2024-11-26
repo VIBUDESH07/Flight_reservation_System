@@ -112,6 +112,16 @@ const HomePage = () => {
         </div>
        
       </div>
+       <footer className="footer">
+        <div className="footer-content">
+          <p>&copy; {new Date().getFullYear()} Your Travel Company. All rights reserved.</p>
+          <div className="footer-links">
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact</a>
+            <a href="/privacy">Privacy Policy</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
