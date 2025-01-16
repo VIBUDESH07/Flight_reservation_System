@@ -608,15 +608,15 @@ def signup():
     print(verification_result)
     if not verification_result['success']:
         return jsonify({"success": False, "message": verification_result['message']}), 400
-
+    
     try:
         connection = connect_to_database()
         cursor = connection.cursor()
-
+        print(username,email,password,role)
         # Insert new user
         cursor.execute("INSERT INTO login (username, email, password, role) VALUES (%s, %s, %s, %s)", (username, email, password, role))
         connection.commit()
-
+        print(successful)
         return jsonify({"success": True, "message": "Signup successful"}), 200
 
     except Error as e:
