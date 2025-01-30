@@ -26,14 +26,14 @@ app.secret_key = secret
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'vibudeshrb.22cse@kongu.edu'
-app.config['MAIL_PASSWORD'] = 'andx xznk qhsn aagi' 
+app.config['MAIL_USERNAME'] = ''
+app.config['MAIL_PASSWORD'] = '' 
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 
 mail = Mail(app)
 
-GOOGLE_CLIENT_ID = '449899539300-fijo74rftd3ih5v8tpi98pd2jcjvurfq.apps.googleusercontent.com'
+GOOGLE_CLIENT_ID = ''
 
 def connect_to_database():
     try:
